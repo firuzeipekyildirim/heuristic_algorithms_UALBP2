@@ -1,0 +1,259 @@
+\documentclass[12pt,a4paper]{article}
+
+% =========================
+% Temel paket yüklemeleri
+% =========================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+
+% Sayfa yapısı ve kenar boşlukları
+\usepackage[margin=2.5cm]{geometry}
+
+% Satır aralığını 1.5 yapıyorum
+\usepackage{setspace}
+\onehalfspacing
+
+% Matematik ortamları için gerekli paketler
+\usepackage{amsmath, amssymb}
+
+% Tablo paketleri
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multicol}
+
+% Görselleri kullanmak için
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{caption}
+
+% Linkleri düzenlemek için
+\usepackage{hyperref}
+
+% Algoritma paketleri
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+% =========================
+% Renk tanımları
+% =========================
+\usepackage{xcolor}
+\definecolor{richmaroonxd}{RGB}{186, 52, 90}
+
+% =========================
+% Algoritma anahtar kelimelerinin renk ve yazım stilini ayarlıyorum
+% =========================
+\algrenewcommand\algorithmicprocedure{\textbf{\textcolor{richmaroonxd}{Procedure}}}
+\algrenewcommand\algorithmicwhile{\textbf{\textcolor{richmaroonxd}{While}}}
+\algrenewcommand\algorithmicfor{\textbf{\textcolor{richmaroonxd}{For}}}
+\algrenewcommand\algorithmicforall{\textbf{\textcolor{richmaroonxd}{For all}}}
+\algrenewcommand\algorithmicif{\textbf{\textcolor{richmaroonxd}{If}}}
+\algrenewcommand\algorithmicelse{\textbf{\textcolor{richmaroonxd}{Else}}}
+\algrenewcommand\algorithmicreturn{\textbf{\textcolor{richmaroonxd}{Return}}}
+\algrenewcommand\algorithmicend{\textbf{\textcolor{richmaroonxd}{End}}}
+
+% Algoritma input-output başlıkları
+\algnewcommand\algorithmicinput{\textbf{\textcolor{richmaroonxd}{Input:}}}
+\algnewcommand\Input{\item[\algorithmicinput]}
+\algnewcommand\algorithmicoutput{\textbf{\textcolor{richmaroonxd}{Output:}}}
+\algnewcommand\Output{\item[\algorithmicoutput]}
+
+% Fonksiyon isimleri için ufak bir kolaylık
+\newcommand{\Func}[1]{\textcolor{richmaroonxd}{#1}}
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Atom One Light renkleri
+\definecolor{atom-bg}{HTML}{FAFAFA}
+\definecolor{atom-blue}{HTML}{007ACC}
+\definecolor{atom-purple}{HTML}{AF00DB}
+\definecolor{atom-green}{HTML}{098658}
+\definecolor{atom-gray}{HTML}{6A6A6A}
+\definecolor{atom-orange}{HTML}{D16969}
+
+\lstdefinestyle{atomone}{
+    backgroundcolor=\color{atom-bg},
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{atom-blue}\bfseries,
+    stringstyle=\color{atom-green},
+    commentstyle=\color{atom-gray}\itshape,
+    numberstyle=\tiny\color{atom-gray},
+    numbers=left,
+    stepnumber=1,
+    numbersep=10pt,
+    frame=single,
+    rulecolor=\color{atom-gray},
+    tabsize=4,
+    showstringspaces=false,
+    breaklines=true,
+    emph={
+        True, False, None,
+        int, float, str, list, dict, set, tuple,
+        range, len, print, return
+    },
+    emphstyle=\color{atom-purple}\bfseries,
+    moredelim=**[is][\color{atom-orange}]{@}{@}  % özel vurgular için
+}
+
+% Kolay kullanım komutu
+\newcommand{\pythoncode}[2]{
+\begin{lstlisting}[style=atomone,caption={#1}]
+#2
+\end{lstlisting}
+}
+
+% =========================
+% Bölüm numaralandırma stilini ayarlıyorum
+% =========================
+\renewcommand{\thesection}{\arabic{section}}
+\renewcommand{\thesubsection}{\arabic{section}.\arabic{subsection}}
+
+% =========================
+% Başlık bilgileri
+% =========================
+\title{\textbf{Solving the U-shaped Assembly Line Balancing Problem Type-II\\Using a Genetic Algorithm}}
+
+\author{
+Firuze İpek Yıldırım \quad 2220469028 \\
+Mustafa Alp Ulaş \quad 2210469034 \\
+Beril Yıldız \quad 2230469107 \\
+Pınar Ece Pank \quad 2240469085 \\
+Tarık Buğra Birinci \quad 2210469046 \\[6pt]
+\textit{Department of Industrial Engineering, Hacettepe University}
+}
+
+\date{Project Final Report\\December 2025}
+
+% =========================
+% DOKÜMAN BAŞLANGICI
+% =========================
+\begin{document}
+
+
+% KAPAK SAYFASI
+
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+
+    {\LARGE \textbf{Solving the U-Shaped Assembly Line Balancing Problem Type-II \\[2mm]
+    Using a Genetic Algorithm}} \par
+
+    \vspace{1.4cm}
+
+    {\large \textbf{Project Final Report}} \\[0.4cm]
+    {\large EMU427 -- Heuristic Methods for Optimization} \\[0.3cm]
+    {\large Department of Industrial Engineering \\ Hacettepe University}
+
+    \vspace{2cm}
+
+    {\large \textbf{Students}} \\[0.5cm]
+
+    \begin{center}
+        \begin{tabular}{l r}
+            Firuze İpek Yıldırım & 2220469028 \\
+            Mustafa Alp Ulaş     & 2210469034 \\
+            Beril Yıldız         & 2230469107 \\
+            Pınar Ece Pank       & 2240469085 \\
+            Tarık Buğra Birinci  & 2210469046 \\
+        \end{tabular}
+    \end{center}
+
+    \vspace{1.6cm}
+
+    {\large \textbf{Instructor:} Prof. Çağrı Koç}
+
+    \vfill
+    {\large December 2025 \\ Ankara, Türkiye}
+\end{titlepage}
+
+
+% İÇİNDEKİLER
+
+\tableofcontents
+\newpage
+
+
+% INTRODUCTION
+
+\section{Introduction}
+% Bu bölümde: U-shaped assembly line kavramı, literatür özeti,
+%%%%%%%%%%% !!!!!!!!!!!!!!documentten copy paste yap ipek
+% UALBP-II’nin neden önemli olduğu ve GA seçme motivasyonumuz anlatılacak.
+
+
+% PROBLEM FORMULATION
+
+\section{Problem Formulation}
+
+\subsection{UALBP-II Definition}
+% Burada problemi resmi olarak tanımlayacağım: amaç fonksiyonu, cycle time,
+% sabit istasyon sayısı ve U-shaped yapıdaki yön değişimleri.
+
+\subsection{Mathematical Model}
+% Modelin değişkenlerini, parametrelerini ve kısıtlarını buraya yazıyorum.
+
+
+% GENETIC ALGORITHM
+
+\section{Description of the Genetic Algorithm}
+
+\subsection{Representation}
+% Burada GA içinde kullandığımız encoding yapısını açıklıyorum.
+
+\subsection{Fitness Function}
+% Fitness = cycle time. Ayrıca feasibility kontrolleri ve penalty mekanizması varsa belirtilecek.
+
+\subsection{Selection, Crossover, Mutation}
+% Operatörlerin detaylarını buraya yazıyorum.
+
+\subsection{Repair and U-Shaped Decoding}
+% U-shaped yapıyı düzeltmek için kullandığımız repair/decode adımlarını açıklıyorum.
+
+
+% RESULTS
+
+\section{Results}
+
+\subsection{Parameter Tuning}
+% Tuning denemelerimizi tablo ve grafiklerle raporlayacağım.
+
+\subsection{Run-by-Run Performance}
+% 10 run sonuçları, best/avg/worst değerlendirmesi.
+
+\subsection{Best Solution Details}
+% En iyi çözümün cycle time’ı, istasyon yükleri ve literatür karşılaştırması.
+
+
+% SDG BÖLÜMÜ
+
+\section{Contribution to Sustainable Development Goals}
+% SDG 9, 12 ve 13 ile ilişkili kısmı buraya yazacağım.
+
+
+% SONUÇ
+
+\section{Conclusions}
+% Çalışmanın ana bulguları ve gelecekte yapılabilecek geliştirmeler.
+
+
+% KAYNAKLAR
+
+\bibliographystyle{IEEEtran}
+\bibliography{refs}
+
+
+% EKLER
+
+\appendix
+\section{Python Source Code}
+% Buraya GA ve tuning kodunu ekleyeceğim.
+\begin{lstlisting}[style=atomone, caption={Simple Python Example}]
+def add(a, b):
+    return a + b
+
+print(add(3, 5))
+\end{lstlisting}
+
+\end{document}
