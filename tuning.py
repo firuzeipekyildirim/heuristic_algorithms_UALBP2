@@ -50,7 +50,7 @@ def run_experiment(mut_rate: float, cross_rate: float) -> float:
 
 def main():
     # farklı değerleri dene
-    mut_values = [0.01, 0.05, 0.10, 0.13]
+    mut_values = [0.01, 0.05, 0.10, 0.15]
     cros_values = [0.6, 0.7, 0.8, 0.95]
 
     out_file = "GA_param_tuning_cycles.csv"
