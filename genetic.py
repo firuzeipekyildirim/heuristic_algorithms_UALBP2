@@ -2,7 +2,9 @@ import random
 import math
 import time
 from typing import List, Tuple, Dict, Set
-
+import csv
+import os
+from datetime import datetime
 # =====================================================
 # KULLANICI AYARLARI
 # =====================================================
@@ -15,7 +17,7 @@ MUTATION_RATE     = 0.1
 RUNS              = 10           # GA kaç kez çalışacak
 BASE_SEED         = 0
 
-OPTIMAL_CYCLE     = 6412          # Excel'den bildiğimiz optimum (Arcus1, m=12)
+OPTIMAL_CYCLE     = 6412       # Excel'den bildiğimiz optimum (Arcus1, m=12)
 
 
 # =====================================================
@@ -553,10 +555,86 @@ def main():
 
     print(f"\nCSV summary saved to: {summary_file}\n")
         # =====================================================
+    # CSV OUTPUT: instance + timestamp ile isimlendirilmiş dosyalar
+    # =====================================================
+
+    # Örn: INSTANCE_PATH = "ARC83.IN2"  -> instance_name = "ARC83"
+    #      INSTANCE_PATH = "data/ARC111.IN2" -> instance_name = "ARC111"
+    instance_name = os.path.splitext(os.path.basename(INSTANCE_PATH))[0]
+
+    # Tarih-saat etiketi (YYYY-MM-DD_HH-MM)
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M")
+
+    # Otomatik dosya adları
+    summary_file      = f"{instance_name}_summary_{timestamp}.csv"
+    runs_file         = f"{instance_name}_run_details_{timestamp}.csv"
+    best_details_file = f"{instance_name}_best_details_{timestamp}.csv"
+
+    print("\nGenerated output filenames:")
+    print("  Summary file     :", summary_file)
+    print("  Run details file :", runs_file)
+    print("  Best details file:", best_details_file)
+    print()
+
+    # =====================================================
+    # CSV OUTPUT 1: genel özet
+    # =====================================================
+    with open(summary_file, "w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+
+        # Başlık satırı
+        writer.writerow([
+            "Instance",
+            "Stations(m)",            
+            "TotalWork(sum_ti)",  
+            "Population",
+            "Generations",
+            "CrossoverRate",
+            "MutationRate",
+            "ParentSelection",
+            "CrossoverMethod",
+            "MutationMethod",
+            "Runs",
+            "BestCycle",
+            "MeanCycle",
+            "WorstCycle",
+            "OptimalC",
+            "BestGapAbs",
+            "BestGapPct",
+            "MeanGapAbs",
+            "MeanGapPct",
+            "TotalRuntime(sec)"
+        ])
+
+        # Veri satırı
+        writer.writerow([
+            instance_name,          # INSTANCE_PATH yerine sadece ARC83 / ARC111
+            M_STATIONS,
+            total_time,  
+            POP_SIZE,
+            GENERATIONS,
+            CROSSOVER_RATE,
+            MUTATION_RATE,
+            "Tournament(k=2)",
+            "POX",
+            "Swap",
+            RUNS,
+            best_overall_cycle,
+            f"{mean_cycle_runs:.2f}",
+            worst_cycle_runs,
+            OPTIMAL_CYCLE,
+            best_gap_abs,
+            f"{best_gap_pct:.3f}",
+            f"{mean_gap_abs:.2f}",
+            f"{mean_gap_pct:.3f}",
+            f"{total_runtime:.2f}"
+        ])
+
+    print(f"CSV summary saved to: {summary_file}\n")
+
+    # =====================================================
     # CSV OUTPUT 2: run bazında cycle & runtime
     # =====================================================
-    runs_file = "GA_run_details.csv"
-
     with open(runs_file, "w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
 
@@ -573,7 +651,9 @@ def main():
 
     print(f"Run details saved to: {runs_file}")
 
-    best_details_file = "GA_best_solution_details.csv"
+    # =====================================================
+    # CSV OUTPUT 3: en iyi çözümün istasyon detayı
+    # =====================================================
 
     total_line_eff = 100.0 * total_time / (M_STATIONS * best_overall_cycle)
 
@@ -597,7 +677,7 @@ def main():
             tasks_str = " ".join(str(t) for t in tasks)
 
             writer.writerow([
-                INSTANCE_PATH,
+                instance_name,
                 M_STATIONS,
                 best_overall_cycle,
                 total_time,
@@ -609,6 +689,5 @@ def main():
             ])
 
     print(f"Best solution details saved to: {best_details_file}")
-
 if __name__ == "__main__":
     main()
