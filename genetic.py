@@ -5,6 +5,7 @@ from typing import List, Tuple, Dict, Set
 import csv
 import os
 from datetime import datetime
+
 # =====================================================
 # KULLANICI AYARLARI
 # =====================================================
@@ -17,7 +18,14 @@ MUTATION_RATE     = 0.1
 RUNS              = 10           # GA kaç kez çalışacak
 BASE_SEED         = 0
 
-OPTIMAL_CYCLE     = 6412       # Excel'den bildiğimiz optimum (Arcus1, m=12)
+OPTIMAL_CYCLE     = 6412         # Excel'den bildiğimiz optimum (Arcus1, m=12)
+
+# =====================================================
+# POX DEBUG AYARLARI
+# =====================================================
+DEBUG_POX         = True         # POX örneği görmek istemezsen False yap
+POX_DEBUG_LIMIT   = 5            # En fazla kaç crossover örneği yazdırılsın
+pox_debug_counter = 0
 
 
 # =====================================================
@@ -225,6 +233,11 @@ def pox_crossover(
     p2: List[int],
     rng: random.Random
 ) -> List[int]:
+    """
+    POX crossover + isteğe bağlı debug çıktısı.
+    """
+    global pox_debug_counter
+
     chosen = set()
     for gene in p1:
         if rng.random() < 0.5:
@@ -239,6 +252,16 @@ def pox_crossover(
     for gene in p2:
         if gene not in chosen:
             child.append(gene)
+
+    # ---- Debug output ----
+    if DEBUG_POX and pox_debug_counter < POX_DEBUG_LIMIT:
+        pox_debug_counter += 1
+        print("\n=== POX CROSSOVER SAMPLE ===")
+        print("Parent1 (first 15):", p1[:15])
+        print("Parent2 (first 15):", p2[:15])
+        print("Chosen subset:", sorted(chosen))
+        print("Child   (first 15):", child[:15])
+        print("============================\n")
 
     return child
 
@@ -405,7 +428,6 @@ def main():
         print(f"============================")
         run_start = time.time()
 
-
         best_perm, best_cycle, best_stations, best_loads, stats = genetic_algorithm_ualbp2(
             n=n,
             times=times,
@@ -419,11 +441,11 @@ def main():
             seed=seed,
             run_index=r
         )
-        
+
         run_end = time.time()                 # bu run'ın bitiş zamanı
         run_runtime = run_end - run_start     # süre (saniye)
 
-        run_best_cycles.append(best_cycle)    # zaten vardı
+        run_best_cycles.append(best_cycle)
         run_runtimes.append(run_runtime)
 
         print(f"\nRun {r} summary:")
@@ -435,7 +457,13 @@ def main():
 
         print("\n  Top 10 individuals in final population:")
         for rank, (fit, cyc, perm) in enumerate(stats["top10"], start=1):
-            print(f"    {rank:2d}) fitness={fit:.6f}, cycle={cyc}, perm_first10={perm[:10]}")
+            print(f"    {rank:2d}) fitness={fit:.6f}, cycle={cyc}")
+            # İlgili istasyonlara dağılımı yazdır
+            feasible, stations, loads = decode_with_cycle_limit(
+                perm, times, preds, succs, M_STATIONS, int(cyc)
+            )
+            for s_idx, tasks in enumerate(stations, start=1):
+                print(f"        Station {s_idx}: {tasks}")
 
         if best_cycle < best_overall_cycle:
             best_overall_cycle = best_cycle
@@ -492,74 +520,19 @@ def main():
 
     print("\nTop 10 individuals of best run (by fitness):")
     for rank, (fit, cyc, perm) in enumerate(best_overall_top10, start=1):
-        print(f"  {rank:2d}) fitness={fit:.6f}, cycle={cyc}, perm_first10={perm[:10]}")
+        print(f"  {rank:2d}) fitness={fit:.6f}, cycle={cyc}")
+        feasible, stations, loads = decode_with_cycle_limit(
+            perm, times, preds, succs, M_STATIONS, int(cyc)
+        )
+        for s_idx, tasks in enumerate(stations, start=1):
+            print(f"        Station {s_idx}: {tasks}")
 
     print(f"\nTotal runtime for {RUNS} runs: {total_runtime:.2f} seconds")
+
     # =====================================================
-    # CSV OUTPUT: global summary
-    # =====================================================
-    import csv
-
-    summary_file = "GA_summary_results.csv"
-
-    with open(summary_file, "w", newline="", encoding="utf-8") as f:
-        writer = csv.writer(f)
-
-        # Başlık satırı
-        writer.writerow([
-            "Instance",
-            "Stations(m)",            
-            "TotalWork(sum_ti)",  
-            "Population",
-            "Generations",
-            "CrossoverRate",
-            "MutationRate",
-            "ParentSelection",
-            "CrossoverMethod",
-            "MutationMethod",
-            "Runs",
-            "BestCycle",
-            "MeanCycle",
-            "WorstCycle",
-            "OptimalC",
-            "BestGapAbs",
-            "BestGapPct",
-            "MeanGapAbs",
-            "MeanGapPct",
-            "TotalRuntime(sec)"
-        ])
-
-        # Veri satırı
-        writer.writerow([
-            INSTANCE_PATH,
-            M_STATIONS,
-            total_time,  
-            POP_SIZE,
-            GENERATIONS,
-            CROSSOVER_RATE,
-            MUTATION_RATE,
-            "Tournament(k=2)",
-            "POX",
-            "Swap",
-            RUNS,
-            best_overall_cycle,
-            f"{mean_cycle_runs:.2f}",
-            worst_cycle_runs,
-            OPTIMAL_CYCLE,
-            best_gap_abs,
-            f"{best_gap_pct:.3f}",
-            f"{mean_gap_abs:.2f}",
-            f"{mean_gap_pct:.3f}",
-            f"{total_runtime:.2f}"
-        ])
-
-    print(f"\nCSV summary saved to: {summary_file}\n")
-        # =====================================================
     # CSV OUTPUT: instance + timestamp ile isimlendirilmiş dosyalar
     # =====================================================
 
-    # Örn: INSTANCE_PATH = "ARC83.IN2"  -> instance_name = "ARC83"
-    #      INSTANCE_PATH = "data/ARC111.IN2" -> instance_name = "ARC111"
     instance_name = os.path.splitext(os.path.basename(INSTANCE_PATH))[0]
 
     # Tarih-saat etiketi (YYYY-MM-DD_HH-MM)
@@ -569,11 +542,13 @@ def main():
     summary_file      = f"{instance_name}_summary_{timestamp}.csv"
     runs_file         = f"{instance_name}_run_details_{timestamp}.csv"
     best_details_file = f"{instance_name}_best_details_{timestamp}.csv"
+    top10_file        = f"{instance_name}-top-10-individuals-{timestamp}.csv"
 
     print("\nGenerated output filenames:")
-    print("  Summary file     :", summary_file)
-    print("  Run details file :", runs_file)
-    print("  Best details file:", best_details_file)
+    print("  Summary file      :", summary_file)
+    print("  Run details file  :", runs_file)
+    print("  Best details file :", best_details_file)
+    print("  Top10 file        :", top10_file)
     print()
 
     # =====================================================
@@ -582,11 +557,10 @@ def main():
     with open(summary_file, "w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
 
-        # Başlık satırı
         writer.writerow([
             "Instance",
-            "Stations(m)",            
-            "TotalWork(sum_ti)",  
+            "Stations(m)",
+            "TotalWork(sum_ti)",
             "Population",
             "Generations",
             "CrossoverRate",
@@ -606,11 +580,10 @@ def main():
             "TotalRuntime(sec)"
         ])
 
-        # Veri satırı
         writer.writerow([
-            instance_name,          # INSTANCE_PATH yerine sadece ARC83 / ARC111
+            instance_name,
             M_STATIONS,
-            total_time,  
+            total_time,
             POP_SIZE,
             GENERATIONS,
             CROSSOVER_RATE,
@@ -689,5 +662,47 @@ def main():
             ])
 
     print(f"Best solution details saved to: {best_details_file}")
+
+    # =====================================================
+    # CSV OUTPUT 4: Top 10 individuals of best run (her biri için istasyonlar)
+    # =====================================================
+    with open(top10_file, "w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+
+        writer.writerow([
+            "Instance",
+            "Stations(m)",
+            "RankInBestRun",
+            "Fitness",
+            "Cycle",
+            "StationIndex",
+            "StationLoad",
+            "StationUtilization(Load/Cycle)",
+            "TasksSequence"
+        ])
+
+        for rank, (fit, cyc, perm) in enumerate(best_overall_top10, start=1):
+            feasible, stations, loads = decode_with_cycle_limit(
+                perm, times, preds, succs, M_STATIONS, int(cyc)
+            )
+            for s_idx, (load, tasks) in enumerate(zip(loads, stations), start=1):
+                tasks_str = " ".join(str(t) for t in tasks)
+                utilization = 0.0 if cyc == 0 else load / cyc
+
+                writer.writerow([
+                    instance_name,
+                    M_STATIONS,
+                    rank,
+                    f"{fit:.6f}",
+                    cyc,
+                    s_idx,
+                    load,
+                    f"{utilization:.4f}",
+                    tasks_str
+                ])
+
+    print(f"Top 10 individuals (best run) saved to: {top10_file}")
+
+
 if __name__ == "__main__":
     main()

@@ -13,7 +13,7 @@
 \contentsline {subsubsection}{\numberline {3.2.1}Core Components and Operators}{5}{subsubsection.3.2.1}%
 \contentsline {subsubsection}{\numberline {3.2.2}Chromosome Representation}{7}{subsubsection.3.2.2}%
 \contentsline {subsubsection}{\numberline {3.2.3}Fitness Function}{7}{subsubsection.3.2.3}%
-\contentsline {subsubsection}{\numberline {3.2.4}Parent Selection: Tournament Selection ($k=2$)}{7}{subsubsection.3.2.4}%
+\contentsline {subsubsection}{\numberline {3.2.4}Parent Selection: Tournament Selection ($k = 2$)}{7}{subsubsection.3.2.4}%
 \contentsline {subsubsection}{\numberline {3.2.5}Crossover Operator: Precedence-Preserving Order Crossover (POX-like)}{7}{subsubsection.3.2.5}%
 \contentsline {subsubsection}{\numberline {3.2.6}Mutation Operator: Swap Mutation}{8}{subsubsection.3.2.6}%
 \contentsline {subsection}{\numberline {3.3}Supporting Mechanisms}{8}{subsection.3.3}%

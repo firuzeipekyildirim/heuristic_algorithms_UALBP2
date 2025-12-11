@@ -369,7 +369,7 @@ The core of the metaheuristic consists of a set of components specifically desig
     \item \textbf{Rationale:} Using the inverse form ensures that a better quality solution (smaller cycle time) results in a higher fitness score. Note that if a solution is found to be infeasible (i.e., $c = \infty$), the fitness is explicitly set to $0.0$; poor solutions are heavily penalized in this way.
 \end{itemize}
 
-\subsubsection{Parent Selection: Tournament Selection ($k=2$)}
+\subsubsection{Parent Selection: Tournament Selection ($k = 2$)}
 \begin{itemize}
     \item \textbf{Mechanism:} Selection is performed using a tournament with size $k=2$, and from the actual tournament group an individual with higher fitness score is selected.
     \item \textbf{Explanation:} Tournament selection is effective in combinatorial optimization problems whose fitness landscapes include numerous plateaus. It helps maintain diversity and also has a reduced sensitivity to scaling issues compared to other methods.
@@ -614,7 +614,7 @@ time obtained over 10 independent GA runs was recorded.
 
 The results demonstrate that mutation rate is the dominant factor affecting 
 solution quality. Very low mutation values (0.01) consistently produced the 
-worst cycle times ($6491–6533$), indicating insufficient population diversity.
+worst cycle times $(6491\text{–}6533)$, indicating insufficient population diversity.
 Increasing mutation rate to 0.10 or 0.13 significantly improved results,
 yielding cycle times as low as 6467.
 
@@ -652,43 +652,6 @@ Mutation Rate & Crossover Rate & Best Cycle Time \\
 \end{tabular}
 \end{table}
 
-
-
-
-\begin{figure}[H]
-\centering
-\begin{tikzpicture}[scale=0.8]
-
-  % Her satır: {4 adet cycle time} / mutation etiketi
-  \foreach \rowdata/\mutlabel [count=\row] in {
-    {6491,6493,6533,6529}/0.01,
-    {6475,6491,6505,6468}/0.05,
-    {6467,6467,6485,6513}/0.10,
-    {6477,6467,6485,6488}/0.13
-  }{
-    % Sadece ilk satırda kolon (crossover) etiketlerini yaz
-    \ifnum\row=1
-      \foreach \xval [count=\col] in {0.60,0.70,0.80,0.95}{
-        \node[minimum size=7mm] at (\col,0) {\xval};
-      }
-    \fi
-
-    % Hücreleri çiz ve cycle time'ları yaz
-    \foreach \cell [count=\col] in \rowdata {
-      \node[
-        fill=yellow!\cell!purple,  % değere göre renk karışımı
-        minimum size=7mm,
-        text=white
-      ] at (\col,-\row) {\cell};
-    }
-
-    % Satır (mutation) etiketi
-    \node[minimum size=7mm] at (0,-\row) {\mutlabel};
-  }
-
-\end{tikzpicture}
-\caption{Best cycle times for each mutation–crossover combination in a heatmap-style grid.}
-\end{figure}
 
 % ------------------------------------------------------------
 
