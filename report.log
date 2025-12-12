@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.4) (preloaded format=pdflatex 2025.12.12)  12 DEC 2025 21:48
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.4) (preloaded format=pdflatex 2025.12.12)  12 DEC 2025 22:07
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -836,7 +836,7 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.36 ...ine {A}Python Source Code}{24}{appendix.A}
+l.36 ...ine {A}Python Source Code}{23}{appendix.A}
                                                   % [1])
 \tf@toc=\write5
 \openout5 = `report.toc'.
@@ -857,26 +857,27 @@ Overfull \hbox (9.62102pt too wide) in paragraph at lines 681--682
  [][] 
  []
 
-[14] [15] [16]
-Overfull \hbox (144.79005pt too wide) in paragraph at lines 737--739
+[14] [15]
+Overfull \hbox (144.79005pt too wide) in paragraph at lines 716--718
 []\T1/cmr/m/n/12 Furthermore, the im-ple-men-ta-tion ex-ports a CSV file named \T1/cmtt/m/n/12 <instance>-top-10-individuals-<timestamp>.csv\T1/cmr/m/n/12 ,
  []
 
+[16]
 <Code_Generated_Image.png, id=333, 1204.5pt x 702.625pt>
 File: Code_Generated_Image.png Graphic file (type png)
 <use Code_Generated_Image.png>
-Package pdftex.def Info: Code_Generated_Image.png  used on input line 776.
+Package pdftex.def Info: Code_Generated_Image.png  used on input line 755.
 (pdftex.def)             Requested size: 455.24411pt x 265.56363pt.
-[17]
-Overfull \hbox (5.91809pt too wide) in paragraph at lines 810--811
+ [17]
+Overfull \hbox (5.91809pt too wide) in paragraph at lines 789--790
 []\T1/cmr/m/n/12 Overall, the load dis-tri-bu-tion closely matches pat-terns ob-served in high-quality UALBP-
  []
 
-[18 <./Code_Generated_Image.png>] [19] [20] [21] (report.bbl [22]) [23]
-Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on input line 904.
+[18 <./Code_Generated_Image.png>] [19] [20] (report.bbl [21]) [22]
+Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on input line 883.
 LaTeX Font Info:    Font shape `T1/cmtt/bx/n' in size <10.95> not available
-(Font)              Font shape `T1/cmtt/m/n' tried instead on input line 906.
- [24] (report.aux)
+(Font)              Font shape `T1/cmtt/m/n' tried instead on input line 885.
+ [23] (report.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2025-11-06>
@@ -885,17 +886,17 @@ Package rerunfilecheck Info: File `report.out' has not changed.
 (rerunfilecheck)             Checksum: D73F38270F6625834F450BEB9C2E082A;7066.
  ) 
 Here is how much of TeX's memory you used:
- 38441 strings out of 467871
- 869993 string characters out of 5418375
+ 38440 strings out of 467871
+ 869986 string characters out of 5418375
  1419285 words of memory out of 5000000
  66646 multiletter control sequences out of 15000+600000
  647482 words of font info for 82 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  84i,19n,94p,883b,2574s stack positions out of 10000i,1000n,20000p,200000b,200000s
  <C:\Users\İpek\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ectt1095.pk> <C:\Users\İpek\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm0600.pk> <C:\Users\İpek\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ectt1200.pk> <C:\Users\İpek\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecti1200.pk> <C:\Users\İpek\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\eccc1200.pk> <C:\Users\İpek\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1000.pk> <C:\Users\İpek\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1200.pk> <C:\Users\İpek\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1200.pk> <C:\Users\İpek\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1728.pk> <C:\Users\İpek\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1200.pk> <C:\Users\İpek\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1440.pk> <C:\Users\İpek\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1440.pk> <C:\Users\İpek\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx2074.pk><C:/Users/İpek/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/İpek/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi12.pfb><C:/Users/İpek/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi6.pfb><C:/Users/İpek/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Users/İpek/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/İpek/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/İpek/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/İpek/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy8.pfb>
-Output written on report.pdf (25 pages, 413948 bytes).
+Output written on report.pdf (24 pages, 412889 bytes).
 PDF statistics:
- 953 PDF objects out of 1000 (max. 8388607)
- 104 named destinations out of 1000 (max. 500000)
+ 949 PDF objects out of 1000 (max. 8388607)
+ 103 named destinations out of 1000 (max. 500000)
  304 words of extra memory for PDF output out of 10000 (max. 10000000)
 
