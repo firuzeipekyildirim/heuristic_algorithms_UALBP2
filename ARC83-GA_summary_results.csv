@@ -1,2 +1,0 @@
-Instance,Stations(m),TotalWork(sum_ti),Population,Generations,CrossoverRate,MutationRate,ParentSelection,CrossoverMethod,MutationMethod,Runs,BestCycle,MeanCycle,WorstCycle,OptimalC,BestGapAbs,BestGapPct,MeanGapAbs,MeanGapPct,TotalRuntime(sec)
-ARC83.IN2,12,75707,40,300,0.7,0.1,Tournament(k=2),POX,Swap,10,6467.0,6518.40,6562.0,6412,55.0,0.858,106.40,1.659,284.27

@@ -9,21 +9,21 @@ from datetime import datetime
 # =====================================================
 # KULLANICI AYARLARI
 # =====================================================
-INSTANCE_PATH     = "ARC83.IN2"   # IN2 dosyanın yolu
+INSTANCE_PATH     = "ARC111.IN2"   # IN2 dosyanın yolu
 M_STATIONS        = 12            # istasyon sayısı
 POP_SIZE          = 40
-GENERATIONS       = 300
+GENERATIONS       = 300 #gorsellestirme
 CROSSOVER_RATE    = 0.7
-MUTATION_RATE     = 0.1
-RUNS              = 10           # GA kaç kez çalışacak
+MUTATION_RATE     = 0.08
+RUNS              = 10         # GA kaç kez çalışacak
 BASE_SEED         = 0
 
-OPTIMAL_CYCLE     = 6412         # Excel'den bildiğimiz optimum (Arcus1, m=12)
+OPTIMAL_CYCLE     = 12534         # Excel'den bildiğimiz optimum (Arcus1, m=12)
 
 # =====================================================
 # POX DEBUG AYARLARI
 # =====================================================
-DEBUG_POX         = True         # POX örneği görmek istemezsen False yap
+DEBUG_POX         = False         # POX örneği görmek istemezsen False yap
 POX_DEBUG_LIMIT   = 5            # En fazla kaç crossover örneği yazdırılsın
 pox_debug_counter = 0
 
