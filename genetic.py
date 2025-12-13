@@ -9,8 +9,8 @@ from datetime import datetime
 # =====================================================
 # KULLANICI AYARLARI
 # =====================================================
-INSTANCE_PATH     = "ARC111.IN2"   # IN2 dosyanın yolu
-M_STATIONS        = 12            # istasyon sayısı
+INSTANCE_PATH     = "ARC83.IN2"   # IN2 dosyanın yolu
+M_STATIONS        = 12          # istasyon sayısı
 POP_SIZE          = 40
 GENERATIONS       = 300 #gorsellestirme
 CROSSOVER_RATE    = 0.7
@@ -18,7 +18,7 @@ MUTATION_RATE     = 0.08
 RUNS              = 10         # GA kaç kez çalışacak
 BASE_SEED         = 0
 
-OPTIMAL_CYCLE     = 12534         # Excel'den bildiğimiz optimum (Arcus1, m=12)
+OPTIMAL_CYCLE     = 6467       # Excel'den bildiğimiz optimum AMA SALBP İÇİN
 
 # =====================================================
 # POX DEBUG AYARLARI
@@ -301,6 +301,11 @@ def genetic_algorithm_ualbp2(
     best_cycle = float("inf")
     best_stations = None
     best_loads = None
+ # ----- CONVERGENCE KAYDI (jenerasyon bazlı) -----
+    history_best_so_far = []   # her jenerasyon sonunda global best (best_cycle)
+    history_best_gen = []      # her jenerasyonun kendi en iyisi
+    history_mean_gen = []      # jenerasyon ortalaması (popülasyon)
+
 
     for gen in range(generations):
         fitness_vals = []
@@ -326,6 +331,16 @@ def genetic_algorithm_ualbp2(
             else:
                 fit = 1.0 / eval_cache[key]
             fitness_vals.append(fit)
+ # ----- JENERASYON SONU CONVERGENCE METRİKLERİ -----
+# Bu jenerasyondaki cycle değerleri (eval_cache üzerinden)
+        gen_cycles = list(eval_cache.values())
+        gen_best = min(gen_cycles)
+        gen_mean = sum(gen_cycles) / len(gen_cycles)
+
+        history_best_gen.append(gen_best)
+        history_mean_gen.append(gen_mean)
+        history_best_so_far.append(best_cycle)
+
 
         new_population: List[List[int]] = []
         if best_perm is not None:
@@ -382,7 +397,11 @@ def genetic_algorithm_ualbp2(
         "final_best_fit": best_fit_final,
         "final_mean_fit": mean_fit_final,
         "final_worst_fit": worst_fit_final,
-        "top10": top10
+        "top10": top10,
+        "history_best_so_far": history_best_so_far,
+        "history_best_gen": history_best_gen,
+        "history_mean_gen": history_mean_gen,
+
     }
 
     return best_perm, best_cycle, best_stations, best_loads, run_stats
@@ -415,6 +434,8 @@ def main():
     print(f"Overall theoretical LB       = {lb}")
     print()
 
+
+    all_convergence_rows = []  # tek dosyada tüm run’ları birleştirmek için
     run_best_cycles = []
     run_runtimes = []
     best_overall_cycle = float("inf")
@@ -441,6 +462,19 @@ def main():
             seed=seed,
             run_index=r
         )
+
+        hb  = stats["history_best_so_far"]
+        hbg = stats["history_best_gen"]
+        hm  = stats["history_mean_gen"]
+
+        for g in range(GENERATIONS):
+            all_convergence_rows.append([
+                r,          # Run index
+                g + 1,      # Generation
+                hb[g],      # Best-so-far
+                hbg[g],     # Best in generation
+                hm[g]       # Mean cycle
+            ])
 
         run_end = time.time()                 # bu run'ın bitiş zamanı
         run_runtime = run_end - run_start     # süre (saniye)
@@ -543,6 +577,7 @@ def main():
     runs_file         = f"{instance_name}_run_details_{timestamp}.csv"
     best_details_file = f"{instance_name}_best_details_{timestamp}.csv"
     top10_file        = f"{instance_name}-top-10-individuals-{timestamp}.csv"
+    convergence_file = f"{instance_name}_convergence_{timestamp}.csv"
 
     print("\nGenerated output filenames:")
     print("  Summary file      :", summary_file)
@@ -702,6 +737,17 @@ def main():
                 ])
 
     print(f"Top 10 individuals (best run) saved to: {top10_file}")
+
+
+        # =====================================================
+    # CSV OUTPUT 5: Convergence (tüm run'lar, jenerasyon bazlı)
+    # =====================================================
+    with open(convergence_file, "w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerow(["Run", "Generation", "BestSoFar", "BestInGeneration", "MeanCycle"])
+        writer.writerows(all_convergence_rows)
+
+    print(f"Convergence history saved to: {convergence_file}")
 
 
 if __name__ == "__main__":

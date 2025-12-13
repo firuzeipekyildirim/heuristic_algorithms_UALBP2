@@ -8,29 +8,33 @@
 \contentsline {subsection}{\numberline {2.5}Computational Complexity}{5}{subsection.2.5}%
 \contentsline {subsection}{\numberline {2.6}Importance of Solving UALBP-2}{6}{subsection.2.6}%
 \contentsline {subsection}{\numberline {2.7}MILP Formulation for UALBP-2}{6}{subsection.2.7}%
-\contentsline {section}{\numberline {3}Description of the Genetic Algorithm}{7}{section.3}%
-\contentsline {subsection}{\numberline {3.1}The Algorithm}{7}{subsection.3.1}%
-\contentsline {subsection}{\numberline {3.2}Implementation}{7}{subsection.3.2}%
-\contentsline {subsubsection}{\numberline {3.2.1}Constructive Heuristic}{7}{subsubsection.3.2.1}%
-\contentsline {subsubsection}{\numberline {3.2.2}Chromosome Representation}{9}{subsubsection.3.2.2}%
-\contentsline {subsubsection}{\numberline {3.2.3}U-Shaped Decoding}{9}{subsubsection.3.2.3}%
-\contentsline {subsubsection}{\numberline {3.2.4}Fitness Function}{10}{subsubsection.3.2.4}%
-\contentsline {subsubsection}{\numberline {3.2.5}Parent Selection: Tournament Selection ($k = 2$)}{10}{subsubsection.3.2.5}%
-\contentsline {subsubsection}{\numberline {3.2.6}Crossover Operator: Precedence-Preserving Order Crossover (POX-like)}{10}{subsubsection.3.2.6}%
-\contentsline {subsubsection}{\numberline {3.2.7}Mutation Operator: Swap Mutation}{11}{subsubsection.3.2.7}%
-\contentsline {subsubsection}{\numberline {3.2.8}Repair Mechanism}{11}{subsubsection.3.2.8}%
-\contentsline {subsubsection}{\numberline {3.2.9}Termination Criteria}{11}{subsubsection.3.2.9}%
-\contentsline {section}{\numberline {4}Results}{12}{section.4}%
-\contentsline {subsection}{\numberline {4.1}Global Performance Summary}{12}{subsection.4.1}%
-\contentsline {subsection}{\numberline {4.2}Run-by-Run Analysis}{13}{subsection.4.2}%
-\contentsline {subsection}{\numberline {4.3}Parameter Tuning}{13}{subsection.4.3}%
-\contentsline {subsection}{\numberline {4.4}Final Population and Top-10 Individuals}{16}{subsection.4.4}%
-\contentsline {subsection}{\numberline {4.5}Best Solution Analysis}{17}{subsection.4.5}%
-\contentsline {subsubsection}{\numberline {4.5.1}Cycle Time and Line Efficiency}{17}{subsubsection.4.5.1}%
-\contentsline {subsubsection}{\numberline {4.5.2}Station Load Distribution}{18}{subsubsection.4.5.2}%
-\contentsline {subsubsection}{\numberline {4.5.3}Task Sequence Characteristics}{19}{subsubsection.4.5.3}%
-\contentsline {subsection}{\numberline {4.6}Interpretation of Overall Results}{19}{subsection.4.6}%
-\contentsline {subsubsection}{\numberline {4.6.1}Adaptability and Flexibility}{19}{subsubsection.4.6.1}%
-\contentsline {section}{\numberline {5}Contribution to Sustainable Development Goals}{20}{section.5}%
-\contentsline {section}{\numberline {6}Conclusions}{21}{section.6}%
-\contentsline {section}{\numberline {A}Python Source Code}{23}{appendix.A}%
+\contentsline {paragraph}{1. Task Assignment}{7}{section*.6}%
+\contentsline {paragraph}{2. Station Index Definition}{7}{section*.7}%
+\contentsline {paragraph}{3. Cycle Time Constraint}{7}{section*.8}%
+\contentsline {paragraph}{4. U-Shaped Precedence Constraints}{7}{section*.9}%
+\contentsline {paragraph}{5. Variable Domains}{7}{section*.12}%
+\contentsline {section}{\numberline {3}Description of the Genetic Algorithm}{8}{section.3}%
+\contentsline {subsection}{\numberline {3.1}The Algorithm}{8}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Implementation}{8}{subsection.3.2}%
+\contentsline {subsubsection}{\numberline {3.2.1}Constructive Heuristic}{8}{subsubsection.3.2.1}%
+\contentsline {subsubsection}{\numberline {3.2.2}Chromosome Representation}{10}{subsubsection.3.2.2}%
+\contentsline {subsubsection}{\numberline {3.2.3}U-Shaped Decoding}{10}{subsubsection.3.2.3}%
+\contentsline {subsubsection}{\numberline {3.2.4}Fitness Function}{11}{subsubsection.3.2.4}%
+\contentsline {subsubsection}{\numberline {3.2.5}Parent Selection: Tournament Selection ($k = 2$)}{11}{subsubsection.3.2.5}%
+\contentsline {subsubsection}{\numberline {3.2.6}Crossover Operator: Precedence-Preserving Order Crossover (POX-like)}{11}{subsubsection.3.2.6}%
+\contentsline {subsubsection}{\numberline {3.2.7}Mutation Operator: Swap Mutation}{12}{subsubsection.3.2.7}%
+\contentsline {subsubsection}{\numberline {3.2.8}Repair Mechanism}{12}{subsubsection.3.2.8}%
+\contentsline {subsubsection}{\numberline {3.2.9}Termination Criteria}{12}{subsubsection.3.2.9}%
+\contentsline {section}{\numberline {4}Results}{13}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Global Performance Summary}{13}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Run-by-Run Analysis}{14}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Parameter Tuning}{15}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Final Population and Top-10 Individuals}{17}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4.5}Best Solution Analysis}{18}{subsection.4.5}%
+\contentsline {subsubsection}{\numberline {4.5.1}Cycle Time and Line Efficiency}{18}{subsubsection.4.5.1}%
+\contentsline {subsubsection}{\numberline {4.5.2}Station Load Distribution}{19}{subsubsection.4.5.2}%
+\contentsline {subsubsection}{\numberline {4.5.3}Task Sequence Characteristics}{20}{subsubsection.4.5.3}%
+\contentsline {subsection}{\numberline {4.6}Interpretation of Overall Results}{20}{subsection.4.6}%
+\contentsline {section}{\numberline {5}Contribution to Sustainable Development Goals}{22}{section.5}%
+\contentsline {section}{\numberline {6}Conclusions}{23}{section.6}%
+\contentsline {section}{\numberline {A}Python Source Code}{25}{appendix.A}%

@@ -29,58 +29,65 @@
 \citation{aase_suresh_2003}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.6}Importance of Solving UALBP-2}{6}{subsection.2.6}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.7}MILP Formulation for UALBP-2}{6}{subsection.2.7}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {3}Description of the Genetic Algorithm}{7}{section.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}The Algorithm}{7}{subsection.3.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Implementation}{7}{subsection.3.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.1}Constructive Heuristic}{7}{subsubsection.3.2.1}\protected@file@percent }
-\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces Genetic Algorithm for UALBP-2}}{8}{algorithm.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{1. Task Assignment}{7}{section*.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{2. Station Index Definition}{7}{section*.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{3. Cycle Time Constraint}{7}{section*.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{4. U-Shaped Precedence Constraints}{7}{section*.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{5. Variable Domains}{7}{section*.12}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3}Description of the Genetic Algorithm}{8}{section.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}The Algorithm}{8}{subsection.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Implementation}{8}{subsection.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.1}Constructive Heuristic}{8}{subsubsection.3.2.1}\protected@file@percent }
+\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces Genetic Algorithm for UALBP-2}}{9}{algorithm.1}\protected@file@percent }
 \providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
-\newlabel{alg:ga_ualbp2}{{1}{8}{Genetic Algorithm for UALBP-2}{algorithm.1}{}}
-\newlabel{alg:ga_ualbp2@cref}{{[algorithm][1][]1}{[1][7][]8}{}{}{}}
+\newlabel{alg:ga_ualbp2}{{1}{9}{Genetic Algorithm for UALBP-2}{algorithm.1}{}}
+\newlabel{alg:ga_ualbp2@cref}{{[algorithm][1][]1}{[1][8][]9}{}{}{}}
 \citation{GhoshGagne2011}
 \citation{GhoshGagne2011}
 \citation{KaraIslierAtasagun2010}
 \citation{scholl_klein_1999}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.2}Chromosome Representation}{9}{subsubsection.3.2.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.3}U-Shaped Decoding}{9}{subsubsection.3.2.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.2}Chromosome Representation}{10}{subsubsection.3.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.3}U-Shaped Decoding}{10}{subsubsection.3.2.3}\protected@file@percent }
 \citation{ErelSarin1998}
 \citation{BlickleThiele1996}
 \citation{ParkKimLee2003}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.4}Fitness Function}{10}{subsubsection.3.2.4}\protected@file@percent }
-\newlabel{eq:cycle_time}{{1}{10}{Fitness Function}{equation.1}{}}
-\newlabel{eq:cycle_time@cref}{{[equation][1][]1}{[1][10][]10}{}{}{}}
-\newlabel{eq:fitness}{{2}{10}{Fitness Function}{equation.2}{}}
-\newlabel{eq:fitness@cref}{{[equation][2][]2}{[1][10][]10}{}{}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.5}Parent Selection: Tournament Selection ($k = 2$)}{10}{subsubsection.3.2.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.6}Crossover Operator: Precedence-Preserving Order Crossover (POX-like)}{10}{subsubsection.3.2.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.4}Fitness Function}{11}{subsubsection.3.2.4}\protected@file@percent }
+\newlabel{eq:cycle_time}{{6}{11}{Fitness Function}{equation.6}{}}
+\newlabel{eq:cycle_time@cref}{{[equation][6][]6}{[1][11][]11}{}{}{}}
+\newlabel{eq:fitness}{{7}{11}{Fitness Function}{equation.7}{}}
+\newlabel{eq:fitness@cref}{{[equation][7][]7}{[1][11][]11}{}{}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.5}Parent Selection: Tournament Selection ($k = 2$)}{11}{subsubsection.3.2.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.6}Crossover Operator: Precedence-Preserving Order Crossover (POX-like)}{11}{subsubsection.3.2.6}\protected@file@percent }
 \citation{Reeves1993}
 \citation{goldberg_1989}
 \citation{PapadimitriouSteiglitz1998}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.7}Mutation Operator: Swap Mutation}{11}{subsubsection.3.2.7}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.8}Repair Mechanism}{11}{subsubsection.3.2.8}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.9}Termination Criteria}{11}{subsubsection.3.2.9}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4}Results}{12}{section.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Global Performance Summary}{12}{subsection.4.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Run-by-Run Analysis}{13}{subsection.4.2}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Cycle Times Obtained from 10 Independent GA Runs}}{13}{table.caption.2}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Cycle time obtained in each of the 10 independent GA runs.}}{13}{figure.caption.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Parameter Tuning}{13}{subsection.4.3}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Parameter Tuning Results for Mutation and Crossover Rates}}{14}{table.caption.4}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Heatmap of the best cycle time (best\_cycle\_over\_5\_runs) for each mutation--crossover combination.}}{15}{figure.caption.5}\protected@file@percent }
-\newlabel{fig:heatmap_full_cr_mr}{{2}{15}{Heatmap of the best cycle time (best\_cycle\_over\_5\_runs) for each mutation--crossover combination}{figure.caption.5}{}}
-\newlabel{fig:heatmap_full_cr_mr@cref}{{[figure][2][]2}{[1][14][]15}{}{}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Final Population and Top-10 Individuals}{16}{subsection.4.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}Best Solution Analysis}{17}{subsection.4.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.5.1}Cycle Time and Line Efficiency}{17}{subsubsection.4.5.1}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces U-shaped assembly line layout for ARC83.IN2 obtained by the GA.}}{18}{figure.caption.6}\protected@file@percent }
-\newlabel{fig:arc83_u_layout}{{3}{18}{U-shaped assembly line layout for ARC83.IN2 obtained by the GA}{figure.caption.6}{}}
-\newlabel{fig:arc83_u_layout@cref}{{[figure][3][]3}{[1][17][]18}{}{}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.5.2}Station Load Distribution}{18}{subsubsection.4.5.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.5.3}Task Sequence Characteristics}{19}{subsubsection.4.5.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.6}Interpretation of Overall Results}{19}{subsection.4.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.6.1}Adaptability and Flexibility}{19}{subsubsection.4.6.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.7}Mutation Operator: Swap Mutation}{12}{subsubsection.3.2.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.8}Repair Mechanism}{12}{subsubsection.3.2.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.9}Termination Criteria}{12}{subsubsection.3.2.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4}Results}{13}{section.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Global Performance Summary}{13}{subsection.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Run-by-Run Analysis}{14}{subsection.4.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Cycle Times Obtained from 10 Independent GA Runs}}{14}{table.caption.13}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Instance ARC83 cycle time obtained in each of the 10 independent GA runs, including best, worst, and average values.}}{14}{figure.caption.14}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Instance ARC111, Cycle time obtained in each of the 10 independent GA runs, including best, worst, and average values.}}{15}{figure.caption.15}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Parameter Tuning}{15}{subsection.4.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Heatmap of the best cycle time for each mutation crossover combination.}}{16}{figure.caption.16}\protected@file@percent }
+\newlabel{fig:heatmap_full_cr_mr}{{3}{16}{Heatmap of the best cycle time for each mutation crossover combination}{figure.caption.16}{}}
+\newlabel{fig:heatmap_full_cr_mr@cref}{{[figure][3][]3}{[1][15][]16}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Final Population and Top-10 Individuals}{17}{subsection.4.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}Best Solution Analysis}{18}{subsection.4.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.5.1}Cycle Time and Line Efficiency}{18}{subsubsection.4.5.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces U-shaped assembly line layout for ARC83.IN2 obtained by the GA.}}{19}{figure.caption.17}\protected@file@percent }
+\newlabel{fig:arc83_u_layout}{{4}{19}{U-shaped assembly line layout for ARC83.IN2 obtained by the GA}{figure.caption.17}{}}
+\newlabel{fig:arc83_u_layout@cref}{{[figure][4][]4}{[1][18][]19}{}{}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.5.2}Station Load Distribution}{19}{subsubsection.4.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.5.3}Task Sequence Characteristics}{20}{subsubsection.4.5.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.6}Interpretation of Overall Results}{20}{subsection.4.6}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces GA Performance Summary for Solved Benchmark Instances}}{20}{table.caption.18}\protected@file@percent }
+\newlabel{tab:ga_performance_summary}{{2}{20}{GA Performance Summary for Solved Benchmark Instances}{table.caption.18}{}}
+\newlabel{tab:ga_performance_summary@cref}{{[table][2][]2}{[1][20][]20}{}{}{}}
 \citation{un_2030_agenda_2015}
-\@writefile{toc}{\contentsline {section}{\numberline {5}Contribution to Sustainable Development Goals}{20}{section.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5}Contribution to Sustainable Development Goals}{22}{section.5}\protected@file@percent }
 \bibstyle{IEEEtran}
 \bibdata{references}
 \bibcite{becker_scholl_2006_generalized_survey}{1}
@@ -96,13 +103,18 @@
 \bibcite{GhoshGagne2011}{11}
 \bibcite{KaraIslierAtasagun2010}{12}
 \bibcite{ErelSarin1998}{13}
-\@writefile{toc}{\contentsline {section}{\numberline {6}Conclusions}{21}{section.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6}Conclusions}{23}{section.6}\protected@file@percent }
 \bibcite{BlickleThiele1996}{14}
 \bibcite{ParkKimLee2003}{15}
 \bibcite{Reeves1993}{16}
 \bibcite{goldberg_1989}{17}
 \bibcite{PapadimitriouSteiglitz1998}{18}
 \bibcite{un_2030_agenda_2015}{19}
-\@writefile{toc}{\contentsline {section}{\numberline {A}Python Source Code}{23}{appendix.A}\protected@file@percent }
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {1}{\ignorespaces Simple Python Example}}{23}{lstlisting.1}\protected@file@percent }
-\gdef \@abspage@last{24}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Run-by-run best cycle time and runtime results for all benchmark instances.}}{25}{table.caption.23}\protected@file@percent }
+\newlabel{tab:run_by_run_all}{{3}{25}{Run-by-run best cycle time and runtime results for all benchmark instances}{table.caption.23}{}}
+\newlabel{tab:run_by_run_all@cref}{{[table][3][]3}{[1][25][]25}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {A}Python Source Code}{25}{appendix.A}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {1}{\ignorespaces Simple Python Example}}{25}{lstlisting.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Run-by-run best cycle time and runtime results for all benchmark instances (continued).}}{26}{table.caption.24}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Run-by-run best cycle time and runtime results for all benchmark instances (continued).}}{26}{table.caption.25}\protected@file@percent }
+\gdef \@abspage@last{27}

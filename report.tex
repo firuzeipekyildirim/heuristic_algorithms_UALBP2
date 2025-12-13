@@ -6,6 +6,11 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[english]{babel}
+\usepackage{subcaption}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{longtable}
+\usepackage{booktabs}
 
 % Sayfa yapısı ve kenar boşlukları
 \usepackage[margin=2.5cm]{geometry}
@@ -106,8 +111,23 @@
 \usepackage{tikz}
 \usepackage[table]{xcolor}
 \usepackage{pgfplots}
+\usepackage{pgfplotstable}
 \pgfplotsset{compat=1.18}
 
+
+\pgfplotsset{
+  discard if not/.style 2 args={
+    filter discard warning=false,
+    x filter/.code={
+      \edef\tempa{\thisrow{#1}}%
+      \edef\tempb{#2}%
+      \ifx\tempa\tempb
+      \else
+        \def\pgfmathresult{}%
+      \fi
+    }
+  }
+}
 % =========================
 % Bölüm numaralandırma stilini ayarlıyorum
 % =========================
@@ -290,6 +310,79 @@ planning.
 \subsection{MILP Formulation for UALBP-2}
 We adopt a simplified mixed-integer linear programming (MILP) model inspired by formulations in~\cite{aase_suresh_2003}. The objective is to assign tasks to $m$ stations while satisfying U-shaped
 precedence and minimizing cycle time.
+
+\subsubsection*{Sets and Parameters}
+
+\begin{itemize}
+    \item $i = 1,\ldots,n$: tasks
+    \item $j = 1,\ldots,m$: workstations
+    \item $\mathcal{P}$: set of precedence pairs $(p,q)$
+    \item $Pred(i)$: set of predecessors of task $i$
+    \item $Succ(i)$: set of successors of task $i$
+    \item $t_i$: processing time of task $i$
+    \item $M$: sufficiently large constant $(M \ge m)$
+\end{itemize}
+
+\subsubsection*{Decision Variables}
+
+\begin{itemize}
+    \item $X_{ij} \in \{0,1\}$: equals 1 if task $i$ is assigned to station $j$
+    \item $y_i \in \{0,1\}$: 0 for forward feasibility, 1 for backward feasibility
+    \item $S_i \in \{1,\ldots,m\}$: station index of task $i$
+    \item $c \ge 0$: cycle time (to be minimized)
+\end{itemize}
+
+\subsubsection*{Objective Function}
+
+\begin{equation}
+\min \; c
+\end{equation}
+
+\subsubsection*{Constraints}
+
+\paragraph{1. Task Assignment}
+Each task must be assigned to exactly one station:
+\begin{equation}
+\sum_{j=1}^{m} X_{ij} = 1 \qquad \forall i
+\end{equation}
+
+\paragraph{2. Station Index Definition}
+The station index of each task is defined as:
+\begin{equation}
+S_i = \sum_{j=1}^{m} j X_{ij} \qquad \forall i
+\end{equation}
+
+\paragraph{3. Cycle Time Constraint}
+The total processing time at each station cannot exceed the cycle time:
+\begin{equation}
+\sum_{i=1}^{n} t_i X_{ij} \le c \qquad \forall j
+\end{equation}
+
+\paragraph{4. U-Shaped Precedence Constraints}
+
+\textit{Forward feasibility} for each predecessor $p \in Pred(q)$:
+\begin{equation}
+S_p \le S_q + M y_q
+\tag{4a}
+\end{equation}
+
+\textit{Backward feasibility} for each successor $s \in Succ(q)$:
+\begin{equation}
+S_s \le S_q + M (1 - y_q)
+\tag{4b}
+\end{equation}
+
+These constraints ensure that task $q$ is feasible in either the forward or backward direction.
+
+\paragraph{5. Variable Domains}
+
+\begin{equation}
+X_{ij},\, y_i \in \{0,1\}, 
+\quad S_i \in \{1,\ldots,m\},
+\quad c \ge 0
+\end{equation}
+
+
 
 % GENETIC ALGORITHM
 
@@ -507,8 +600,18 @@ The final parameter settings, which were in use during all the experiments, are 
     xtick={1,...,10},
     ytick={6400,6450,6500,6550,6600},
     title={Cycle Time per GA Run},
+    scaled y ticks=false,
+    y tick label style={/pgf/number format/fixed},
+    legend style={
+        at={(1.02,0.5)},
+        anchor=west,
+        draw=none
+    }
 ]
 
+% -------------------------
+% GA run results (main line)
+% -------------------------
 \addplot[
     mark=*,
     blue,
@@ -526,48 +629,134 @@ The final parameter settings, which were in use during all the experiments, are 
     (10,6562)
 };
 
-\legend{GA Run Result, Optimal ($C^{*}=6412$)}
+% -------------------------
+% Best line
+% -------------------------
+\addplot[
+    red,
+    dashed,
+    thick
+] coordinates {
+    (1,6467) (10,6467)
+};
+
+% -------------------------
+% Worst line
+% -------------------------
+\addplot[
+    red,
+    dashed,
+    thick
+] coordinates {
+    (1,6562) (10,6562)
+};
+
+% -------------------------
+% Average line
+% -------------------------
+\addplot[
+    red,
+    dashed,
+    thick
+] coordinates {
+    (1,6518.4) (10,6518.4)
+};
+
+\legend{GA Run Result, Best, Worst, Average}
+
 \end{axis}
 \end{tikzpicture}
-\caption{Cycle time obtained in each of the 10 independent GA runs.}
+\caption{Instance ARC83 cycle time obtained in each of the 10 independent GA runs, including best, worst, and average values.}
+\end{figure}
+
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    width=17cm,
+    height=9cm,
+    xlabel={Run Number},
+    ylabel={Cycle Time},
+    ymin=12540, ymax=12552,
+    grid=major,
+    xtick={1,...,10},
+    ytick={12540,12542,12544,12546,12548,12550,12552},
+    title={Cycle Time per GA Run},
+    scaled y ticks=false,
+    y tick label style={/pgf/number format/fixed}
+]
+
+
+% -------------------------
+% GA run results (MAIN LINE)
+% -------------------------
+\addplot[
+    mark=*,
+    blue,
+    thick
+] coordinates {
+    (1,12542)
+    (2,12546)
+    (3,12549)
+    (4,12547)
+    (5,12549)
+    (6,12546)
+    (7,12550)
+    (8,12549)
+    (9,12550)
+    (10,12543)
+};
+
+% -------------------------
+% Best line
+% -------------------------
+\addplot[
+    red,
+    dashed,
+    thick
+] coordinates {
+    (1,12542) (10,12542)
+};
+
+% -------------------------
+% Worst line
+% -------------------------
+\addplot[
+    red,
+    dashed,
+    thick
+] coordinates {
+    (1,12550) (10,12550)
+};
+
+% -------------------------
+% Average line
+% -------------------------
+\addplot[
+    red,
+    dashed,
+    thick
+] coordinates {
+    (1,12547.1) (10,12547.1)
+};
+
+\legend{GA Run Result, Best, Worst, Average}
+
+\end{axis}
+\end{tikzpicture}
+\caption{Instance ARC111, Cycle time obtained in each of the 10 independent GA runs, including best, worst, and average values.}
 \end{figure}
 
 
 \par
 \subsection{Parameter Tuning}
 
-The reason we focused particularly on the crossover and mutation parameters in the fine-tuning study is that these two operators directly control the diversification and intensification mechanisms of the GA. Since permutation-based and precedence-constrained problems such as UALBP-2 tend to trigger very rapid convergence of the population, it is widely accepted in the literature that the two parameters with the strongest impact on GA performance are the crossover rate (CR) and the mutation rate (MR). Therefore, crossover values in the range of 0.60--0.95 and mutation values in the range of 0.01--0.15 were evaluated, enabling a systematic examination of four characteristic behavior regimes of the algorithm (low--medium--high--very high exploration levels).
-\begin{table}[H]
-\centering
-\caption{Parameter Tuning Results for Mutation and Crossover Rates}
-\begin{tabular}{c c c c}
-\toprule
-\noindent\textbf{Test} & \noindent\textbf{Mutation Rate} & \noindent\textbf{Crossover Rate} & \noindent\textbf{Best Cycle Time} \\
-\midrule
-1  & 0.01 & 0.60 & 6491 \\
-2  & 0.01 & 0.70 & 6493 \\
-3  & 0.01 & 0.80 & 6533 \\
-4  & 0.01 & 0.95 & 6529 \\
-5  & 0.05 & 0.60 & 6475 \\
-6  & 0.05 & 0.70 & 6491 \\
-7  & 0.05 & 0.80 & 6505 \\
-8  & 0.05 & 0.95 & 6468 \\
-9  & 0.10 & 0.60 & 6467 \\
-10 & 0.10 & 0.70 & 6467 \\
-11 & 0.10 & 0.80 & 6485 \\
-12 & 0.10 & 0.95 & 6513 \\
-13 & 0.13 & 0.60 & 6477 \\
-14 & 0.13 & 0.70 & 6467 \\
-15 & 0.13 & 0.80 & 6485 \\
-16 & 0.13 & 0.95 & 6488 \\
-\bottomrule
-\end{tabular}
-\end{table}
+The reason we focused particularly on the crossover and mutation parameters in the fine-tuning study is that these two operators directly control the diversification and intensification mechanisms of the GA. Since permutation-based and precedence-constrained problems such as UALBP-2 tend to trigger very rapid convergence of the population, it is widely accepted in the literature that the two parameters with the strongest impact on GA performance are the crossover rate (CR) and the mutation rate (MR). Therefore, a full-factorial grid search was conducted by testing eight mutation rate levels (0.005, 0.01, 0.02, 0.04, 0.06, 0.08, 0.12, 0.20) and eight crossover rate levels (0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.90, 0.98), resulting in 64 parameter combinations. Each configuration was evaluated using the best cycle time obtained over 5 independent runs (best\_cycle\_over\_5\_runs), enabling a systematic comparison of the exploration–exploitation balance across low-to-high MR and CR regimes.
 
 \begin{figure}[H]
 \centering
-\begin{tikzpicture}
-\begin{axis}[
+\begin{tikzpicture}\begin{axis}[
     width=13cm,
     height=8cm,
     xlabel={Crossover Rate (CR)},
@@ -579,10 +768,15 @@ The reason we focused particularly on the crossover and mutation parameters in t
     ytick={1,2,3,4,5,6,7,8},
     yticklabels={0.005,0.01,0.02,0.04,0.06,0.08,0.12,0.20},
     y dir=reverse,
-    colormap/viridis,
+    colormap={YellowOrangeRed}{
+    rgb255=(255,243,59)
+    rgb255=	(243,144,13)
+    rgb255=(233,62,18)
+    },
     colorbar,
     colorbar style={title={Best Cycle Time (5 runs)}},
     title={Heatmap of Best Cycle Time for Each (MR, CR) Pair},
+    title style={yshift=+1.2em},
     grid=major
 ]
 
@@ -679,7 +873,7 @@ x  y  best
 
 \end{axis}
 \end{tikzpicture}
-\caption{Heatmap of the best cycle time (best\_cycle\_over\_5\_runs) for each mutation--crossover combination.}
+\caption{Heatmap of the best cycle time for each mutation crossover combination.}
 \label{fig:heatmap_full_cr_mr}
 \end{figure}
 
@@ -752,7 +946,7 @@ U-shaped line.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{Code_Generated_Image.png}
+    \includegraphics[width=\textwidth]{arc38.jpg}
     \caption{U-shaped assembly line layout for ARC83.IN2 obtained by the GA.}
     \label{fig:arc83_u_layout}
 \end{figure}
@@ -803,30 +997,107 @@ The POX crossover and topological repair operators worked in unison to keep feas
 \par
 \subsection{Interpretation of Overall Results}
 
+\begin{table}[H]
+\centering
+\caption{GA Performance Summary for Solved Benchmark Instances}\label{tab:ga_performance_summary}
+
+\resizebox{\textwidth}{!}{
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Instance} &
+\textbf{Best Cycle Time} &
+\textbf{Average Cycle Time} &
+\textbf{Worst Cycle Time} &
+\textbf{Avg. Runtime (s)} \\
+\midrule
+ARC83      & 6467  & 6520.4 & 6562  & 26.836 \\
+ARC111     & 12542 & 12547.1 & 12550 & 42.870 \\
+GUNTHER    & 44    & 44.0   & 44    & 5.657 \\
+BARTHOLD   & 470   & 470.9  & 471   & 41.965 \\
+BARTHOL2   & 159   & 159.0  & 159   & 63.846 \\
+SCHOLL     & 1818  & 1823.8 & 1829  & 290.926 \\
+LUTZ1      & 1400  & 1400.0 & 1400  & 7.858 \\
+LUTZ3      & 548   & 548.0  & 548   & 8.583 \\
+SAWYER30   & 47    & 47.0   & 47    & 3.348 \\
+TONGE70    & 209   & 209.8  & 210   & 22.214 \\
+\bottomrule
+\end{tabular}
+}
+
+\end{table}
+
+Table~\ref{tab:ga_performance_summary} presents a comparative performance summary of the proposed Genetic Algorithm across ten benchmark U-shaped Assembly Line Balancing Problem instances. For each instance, the best, average, and worst cycle times obtained over 10 independent runs are reported together with the average computational time. The results indicate that the GA consistently achieves optimal or near-optimal solutions with low variance across repeated runs, demonstrating both robustness and repeatability. For small- and medium-sized instances such as GUNTHER, SAWYER30, LUTZ1, and LUTZ3, the algorithm reaches the known optimal cycle time in all runs, while for larger and more complex benchmarks such as ARC83, ARC111, and SCHOLL, the obtained solutions remain very close to the optimum with modest optimality gaps. Although computational time increases with problem size and precedence complexity, the overall solution times remain reasonable, confirming the effectiveness of the proposed GA for solving UALBP-2 instances of varying scales.
+
+Several strong conclusions can be drawn from the experimental results:
+
 Several strong conclusions can be drawn from the experimental results:
 
 \begin{itemize}
-    \item The low variance across runs indicates high reliability and repeatability.
-    \item Station load distributions demonstrate effective use of U-line flexibility.
-    \item The best solution shows high line efficiency.
-    \item The GA handled the complex precedence structure well and matched or exceeded state-of-the-art heuristic performance.
+    \item The low variance of cycle times across independent runs indicates high reliability and repeatability of the proposed GA.
+    \item For several benchmark instances, the algorithm consistently reaches the best solution in all runs, demonstrating strong convergence behavior ( small instances).
+    \item For large and complex instances, the GA produces solutions very close to the optimum with limited dispersion, highlighting its robustness under tight precedence constraints.
+    \item Runtime results show a clear dependency on problem size and complexity, while maintaining stable execution times across repeated runs.
+    \item Overall, the GA effectively exploits the flexibility of U-shaped assembly lines and handles complex precedence structures without sacrificing solution quality.
 \end{itemize}
 
-These results indicate that the applied GA is a valid and efficient heuristic for UALBP-2 that can be reliably adopted in similarly structured industrial balancing problems.
+% % ---------- Read CSV once ----------
+% \pgfplotstableread[
+%   col sep=comma,
+%   header=true
+% ]{ga_log.csv}\GATable
 
+% % Kaç run varsa onu yaz
+% \def\RUNCOUNT{10}
 
+% % ---------- One figure per run ----------
+% \foreach \r in {1,...,\RUNCOUNT}{
+% \begin{figure}[H]
+% \centering
+% \begin{tikzpicture}
+% \begin{axis}[
+%     width=0.95\linewidth,
+%     height=6.5cm,
+%     grid=major,
+%     xlabel={Generation},
+%     ylabel={Cycle Time},
+%     title={Convergence (Run \r)},
+%     legend style={at={(0.02,0.02)},anchor=south west,draw=none,fill=none},
+% ]
+% % Best-so-far
+% \addplot[
+%   thick
+% ] table[
+%   x=Generation,
+%   y=BestSoFar,
+%   discard if not={Run}{\r}
+% ]{\GATable};
+% \addlegendentry{Best so far}
 
-\subsubsection{Adaptability and Flexibility}
-The implementation of our genetic algorithm is flexible because, for different benchmark instances, it does not require any change in the core code structure. New problem data can be introduced simply by changing the input instance file-in our case, for example, an IN2 file with task times and precedence relations-and, if needed, the basic run parameters such as the number of stations. This way, the very same solver can be applied to a wide range of instances, which is supportive in systematic benchmarking and fair performance comparison.
+% % Best in generation
+% \addplot[
+%   thick,
+%   densely dashed
+% ] table[
+%   x=Generation,
+%   y=BestInGeneration,
+%   discard if not={Run}{\r}
+% ]{\GATable};
+% \addlegendentry{Best in generation}
 
-Moreover, the solver shows limited flexibility regarding problem variants. Indeed, the very same GA framework can solve both SALBP and UALBP simply by activating the respective task eligibility logics: for SALBP, it enforces only predecessor-based eligibility, while for UALBP, the U-shaped rule allows, in addition, tasks to become eligible when all of their successors have already been assigned. This flexibility, however, is achieved by a configurable mechanism of feasibility/eligibility rather than by several interchangeable genetic operators, which remain fixed in our implementation.
-
-
-
-
-
-
-
+% % Mean cycle
+% \addplot[
+%   thick,
+%   dotted
+% ] table[
+%   x=Generation,
+%   y=MeanCycle,
+%   discard if not={Run}{\r}
+% ]{\GATable};
+% \addlegendentry{Mean}
+% \end{axis}
+% \end{tikzpicture}
+% \caption{Convergence curves for Run \r over 300 generations.}
+% \end{figure}
 
 % SDG BÖLÜMÜ
 
@@ -878,6 +1149,260 @@ In summary, the project uses mathematical modeling and evolutionary computation 
 
 \appendix
 \newpage
+
+% ---------- PART 1 ----------
+\begin{table*}[t]
+\centering
+\caption{Run-by-run best cycle time and runtime results for all benchmark instances.}
+\label{tab:run_by_run_all}
+\footnotesize
+
+% ---------- BARTHOLD ----------
+\begin{subtable}{0.48\textwidth}
+\centering
+\caption{BARTHOLD}
+\begin{tabular}{ccc}
+\toprule
+Run & BestCycle & Runtime (s) \\
+\midrule
+1  & 470 & 40.56 \\
+2  & 471 & 39.63 \\
+3  & 471 & 38.53 \\
+4  & 471 & 41.16 \\
+5  & 471 & 43.95 \\
+6  & 471 & 43.33 \\
+7  & 471 & 40.14 \\
+8  & 471 & 43.86 \\
+9  & 471 & 44.41 \\
+10 & 471 & 43.95 \\
+\bottomrule
+\end{tabular}
+\end{subtable}
+\hfill
+% ---------- TONGE70 ----------
+\begin{subtable}{0.48\textwidth}
+\centering
+\caption{TONGE70}
+\begin{tabular}{ccc}
+\toprule
+Run & BestCycle & Runtime (s) \\
+\midrule
+1  & 210 & 22.10 \\
+2  & 210 & 25.35 \\
+3  & 209 & 22.37 \\
+4  & 210 & 26.65 \\
+5  & 210 & 22.35 \\
+6  & 209 & 20.31 \\
+7  & 210 & 21.34 \\
+8  & 210 & 20.61 \\
+9  & 210 & 20.40 \\
+10 & 210 & 20.53 \\
+\bottomrule
+\end{tabular}
+\end{subtable}
+
+\vspace{4mm}
+
+% ---------- SAWYER30 ----------
+\begin{subtable}{0.48\textwidth}
+\centering
+\caption{SAWYER30}
+\begin{tabular}{ccc}
+\toprule
+Run & BestCycle & Runtime (s) \\
+\midrule
+1  & 47 & 3.00 \\
+2  & 47 & 3.37 \\
+3  & 47 & 3.15 \\
+4  & 47 & 3.29 \\
+5  & 47 & 3.22 \\
+6  & 47 & 3.32 \\
+7  & 47 & 3.54 \\
+8  & 47 & 3.24 \\
+9  & 47 & 3.69 \\
+10 & 47 & 3.61 \\
+\bottomrule
+\end{tabular}
+\end{subtable}
+\hfill
+% ---------- LUTZ1 ----------
+\begin{subtable}{0.48\textwidth}
+\centering
+\caption{LUTZ1}
+\begin{tabular}{ccc}
+\toprule
+Run & BestCycle & Runtime (s) \\
+\midrule
+1  & 1400 & 7.93 \\
+2  & 1400 & 8.13 \\
+3  & 1400 & 7.89 \\
+4  & 1400 & 8.04 \\
+5  & 1400 & 8.05 \\
+6  & 1400 & 7.92 \\
+7  & 1400 & 7.83 \\
+8  & 1400 & 7.53 \\
+9  & 1400 & 7.64 \\
+10 & 1400 & 7.52 \\
+\bottomrule
+\end{tabular}
+\end{subtable}
+
+\end{table*}
+
+% ---------- PART 2 (continued) ----------
+\begin{table*}[t]
+\ContinuedFloat
+\centering
+\caption{Run-by-run best cycle time and runtime results for all benchmark instances (continued).}
+\footnotesize
+
+% ---------- ARC111 ----------
+\begin{subtable}{0.48\textwidth}
+\centering
+\caption{ARC111}
+\begin{tabular}{ccc}
+\toprule
+Run & BestCycle & Runtime (s) \\
+\midrule
+1  & 12542 & 44.32 \\
+2  & 12546 & 43.13 \\
+3  & 12549 & 43.63 \\
+4  & 12547 & 43.07 \\
+5  & 12549 & 42.76 \\
+6  & 12546 & 43.46 \\
+7  & 12550 & 40.49 \\
+8  & 12549 & 42.95 \\
+9  & 12550 & 42.20 \\
+10 & 12543 & 42.57 \\
+\bottomrule
+\end{tabular}
+\end{subtable}
+\hfill
+% ---------- LUTZ3 ----------
+\begin{subtable}{0.48\textwidth}
+\centering
+\caption{LUTZ3}
+\begin{tabular}{ccc}
+\toprule
+Run & BestCycle & Runtime (s) \\
+\midrule
+1  & 548 & 9.68 \\
+2  & 548 & 8.93 \\
+3  & 548 & 8.30 \\
+4  & 548 & 8.27 \\
+5  & 548 & 8.23 \\
+6  & 548 & 8.72 \\
+7  & 548 & 8.60 \\
+8  & 548 & 8.15 \\
+9  & 548 & 8.54 \\
+10 & 548 & 8.37 \\
+\bottomrule
+\end{tabular}
+\end{subtable}
+
+\vspace{4mm}
+
+% ---------- SCHOLL ----------
+\begin{subtable}{0.48\textwidth}
+\centering
+\caption{SCHOLL}
+\begin{tabular}{ccc}
+\toprule
+Run & BestCycle & Runtime (s) \\
+\midrule
+1  & 1825 & 275.45 \\
+2  & 1827 & 290.46 \\
+3  & 1821 & 299.74 \\
+4  & 1824 & 285.49 \\
+5  & 1818 & 273.51 \\
+6  & 1829 & 291.93 \\
+7  & 1821 & 284.44 \\
+8  & 1827 & 285.68 \\
+9  & 1823 & 287.15 \\
+10 & 1823 & 334.99 \\
+\bottomrule
+\end{tabular}
+\end{subtable}
+\hfill
+% ---------- ARC83 ----------
+\begin{subtable}{0.48\textwidth}
+\centering
+\caption{ARC83}
+\begin{tabular}{ccc}
+\toprule
+Run & BestCycle & Runtime (s) \\
+\midrule
+1  & 6467 & 25.89 \\
+2  & 6562 & 26.65 \\
+3  & 6488 & 25.94 \\
+4  & 6534 & 25.53 \\
+5  & 6562 & 25.87 \\
+6  & 6508 & 25.50 \\
+7  & 6512 & 26.62 \\
+8  & 6560 & 30.12 \\
+9  & 6544 & 26.70 \\
+10 & 6467 & 29.45 \\
+\bottomrule
+\end{tabular}
+\end{subtable}
+
+\end{table*}
+
+% ---------- PART 3 (continued) ----------
+\begin{table*}[t]
+\ContinuedFloat
+\centering
+\caption{Run-by-run best cycle time and runtime results for all benchmark instances (continued).}
+\footnotesize
+
+% ---------- BARTHOL2 ----------
+\begin{subtable}{0.48\textwidth}
+\centering
+\caption{BARTHOL2}
+\begin{tabular}{ccc}
+\toprule
+Run & BestCycle & Runtime (s) \\
+\midrule
+1  & 159 & 66.58 \\
+2  & 159 & 71.32 \\
+3  & 159 & 69.39 \\
+4  & 159 & 61.17 \\
+5  & 159 & 60.83 \\
+6  & 159 & 60.94 \\
+7  & 159 & 61.24 \\
+8  & 159 & 62.09 \\
+9  & 159 & 63.06 \\
+10 & 159 & 61.65 \\
+\bottomrule
+\end{tabular}
+\end{subtable}
+\hfill
+% ---------- GUNTHER ----------
+\begin{subtable}{0.48\textwidth}
+\centering
+\caption{GUNTHER}
+\begin{tabular}{ccc}
+\toprule
+Run & BestCycle & Runtime (s) \\
+\midrule
+1  & 44 & 5.09 \\
+2  & 44 & 5.46 \\
+3  & 44 & 6.34 \\
+4  & 44 & 6.25 \\
+5  & 44 & 5.30 \\
+6  & 44 & 5.04 \\
+7  & 44 & 5.49 \\
+8  & 44 & 6.48 \\
+9  & 44 & 5.58 \\
+10 & 44 & 5.44 \\
+\bottomrule
+\end{tabular}
+\end{subtable}
+
+\end{table*}
+
+
+
 \section{Python Source Code}
 % Buraya GA ve tuning kodunu ekleyeceğim.
 \begin{lstlisting}[style=atomone, caption={Simple Python Example}]
