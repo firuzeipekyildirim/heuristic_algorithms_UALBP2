@@ -33,6 +33,10 @@
 \usepackage{float}
 \usepackage{caption}
 
+\usepackage{tikz}
+\usepackage[table]{xcolor}
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
 % Linkleri düzenlemek için
 \usepackage[hidelinks]{hyperref}
 \usepackage[nameinlink,noabbrev]{cleveref}
@@ -108,11 +112,6 @@
 #2
 \end{lstlisting}
 }
-\usepackage{tikz}
-\usepackage[table]{xcolor}
-\usepackage{pgfplots}
-\usepackage{pgfplotstable}
-\pgfplotsset{compat=1.18}
 
 
 \pgfplotsset{
@@ -140,11 +139,11 @@
 \title{\noindent\textbf{Solving the U-shaped Assembly Line Balancing Problem Type-II\\Using a Genetic Algorithm}}
 
 \author{
-Firuze İpek Yıldırım \quad 2220469028 \\
-Mustafa Alp Ulaş \quad 2210469034 \\
-Beril Yıldız \quad 2230469107 \\
-Pınar Ece Pank \quad 2240469085 \\
-Tarık Buğra Birinci \quad 2210469046 \\[6pt]
+Tarık Buğra \textbf{BİRİNCİ} \quad 2210469046 \\
+Pınar Ece \textbf{PANK} \quad 2240469085 \\
+Mustafa Alp \textbf{ULAŞ} \quad 2210469034 \\
+Firuze İpek \textbf{YILDIRIM} \quad 2220469028 \\
+Beril \textbf{YILDIZ} \quad 2230469107 \\[6pt]
 \textit{Department of Industrial Engineering, Hacettepe University}
 }
 
@@ -177,17 +176,17 @@ Tarık Buğra Birinci \quad 2210469046 \\[6pt]
 
     \begin{center}
         \begin{tabular}{l r}
-            Firuze İpek Yıldırım & 2220469028 \\
-            Mustafa Alp Ulaş     & 2210469034 \\
-            Beril Yıldız         & 2230469107 \\
-            Pınar Ece Pank       & 2240469085 \\
-            Tarık Buğra Birinci  & 2210469046 \\
+            Tarık Buğra BİRİNCİ & 2210469046 \\
+            Pınar Ece PANK & 2240469085 \\
+            Mustafa Alp ULAŞ & 2210469034 \\
+            Firuze İpek YILDIRIM & 2220469028 \\
+            Beril YILDIZ & 2230469107 \\[6pt]
         \end{tabular}
     \end{center}
 
     \vspace{1.6cm}
 
-    {\large \noindent\textbf{Instructor:} Prof. Çağrı Koç}
+    {\large \noindent\textbf{Instructor:} Prof. Çağrı KOÇ}
 
     \vfill
     {\large December 2025 \\ Ankara, Türkiye}
@@ -400,49 +399,96 @@ The core component of the algorithm is the representation of the problem. We use
 The algorithm begins by initializing a random population of feasible task sequences. In every generation, the fitness of each individual is evaluated. Since we are solving UALBP-2 (minimizing cycle time $c$ for fixed $m$), the evaluation function involves a sub-procedure that calculates the minimum possible cycle time for a given sequence.
 To generate new offspring, we employ Tournament Selection to choose parents. These parents undergo POX (Precedence Operation Crossover) to produce a child that inherits structural characteristics from both parents. To prevent premature convergence, Swap Mutation is applied with a low probability. Finally, because random genetic operations may violate precedence constraints, a Repair Mechanism is applied to ensure the child remains a valid topological sort.
 
+For the algorithm, we utilized a dataset from assemblylinebalancing.de, a widely cited repository in academic literature that aggregates problem instances from numerous studies. We selected a specific instance from this collection for our analysis.
 
-\begin{algorithm}
-\caption{Genetic Algorithm for UALBP-2}
+The file structure is organized as follows: the initial lines represent the duration of each task. These are followed by the predecedence constraints, which are delimited by commas. Finally, an end-of-file marker indicates the termination of the data.
+
+\begin{algorithm}[H]
+\caption{Genetic Algorithm for UALBP-II}
 \label{alg:ga_ualbp2}
-\begin{algorithmic}[1] % [1] satır numaralarını açar
-    \Require Task times, Precedence constraints, Number of stations ($m$), Parameters ($PopSize, MaxGen, P_c, P_m$)
-    \Ensure Best Found Permutation and Cycle Time
-    
-    \State $P \gets \Call{InitializePopulation}{PopSize}$
-    \State $BestSol \gets \emptyset$
-    
-    \For{$gen \gets 1 \noindent\textbf{ to } MaxGen$}
-        \ForAll{individual $I \in P$}
-            \State $Fitness(I) \gets \Call{EvaluateCycleTime}{I, m}$
-        \EndFor
-        
-        \State $P_{new} \gets \emptyset$
-        
-        \While{$|P_{new}| < PopSize$}
-            \State $Parent1, Parent2 \gets \Call{TournamentSelection}{P, k=2}$
-            
-            \If{$\Call{random}{} < P_c$}
-                \State $Child \gets \Call{POXCrossover}{Parent1, Parent2}$
-            \Else
-                \State $Child \gets Parent1$
-            \EndIf
-            
-            \If{$\Call{random}{} < P_m$}
-                \State $Child \gets \Call{SwapMutation}{Child}$
-            \EndIf
-            
-            \State $Child \gets \Call{RepairToTopological}{Child}$
-            \State Add $Child$ to $P_{new}$
-        \EndWhile
-        
-        \State $P \gets P_{new}$
-        \State Update $BestSol$
+\begin{algorithmic}[1]
+\Require Tasks $T$, task times $t$, precedence graph $P$, number of stations $m$, population size $N_{\text{pop}}$, generations $N_{\text{gen}}$, crossover rate $P_c$, mutation rate $P_m$
+\Ensure Best cycle time $C_{\min}$ and best assignment/permutation $BestSol$
+
+\Statex \textbf{ALGORITHM:} \textsc{Genetic\_Algorithm\_for\_UALBP\_II}
+\Statex
+\Statex \textbf{INPUTS:}
+\Statex \quad Tasks $(T)$, Task Times $(t)$, Precedence Graph $(P)$
+\Statex \quad Number of Stations $(m)$
+\Statex \quad Population Size $(N_{\text{pop}})$, Max Generations $(N_{\text{gen}})$
+\Statex \quad Crossover Rate $(P_c)$, Mutation Rate $(P_m)$
+\Statex
+\Statex \textbf{OUTPUT:}
+\Statex \quad Best Cycle Time $(C_{\min})$, Best Task Assignment $(BestSol)$
+\Statex
+\Statex \textbf{BEGIN}
+
+\Statex \Comment{// 1. Initialization}
+\State $Population \gets [\ ]$
+\For{$i \gets 1$ \textbf{to} $N_{\text{pop}}$}
+    \State $Candidate \gets \Call{GenerateRandomTopologicalSort}{T,P}$
+    \State $\Call{Append}{Population, Candidate}$
+\EndFor
+\State $BestSol \gets \emptyset$
+\State $BestFitness \gets 0$
+\State $C_{\min} \gets +\infty$
+
+\Statex
+\Statex \Comment{// 2. Main Evolution Loop}
+\For{$Generation \gets 1$ \textbf{to} $N_{\text{gen}}$}
+
+    \State $FitnessScores \gets [\ ]$
+
+    \Statex \Comment{// Evaluation}
+    \ForAll{$Individual \in Population$}
+        \State $CurrentC \gets \Call{DecodeAndAssign}{Individual, m, t, P}$ \Comment{cycle time}
+        \State $Fitness \gets 1/CurrentC$
+        \State $\Call{Append}{FitnessScores, Fitness}$
+        \If{$Fitness > BestFitness$}
+            \State $BestFitness \gets Fitness$
+            \State $BestSol \gets Individual$
+            \State $C_{\min} \gets CurrentC$
+        \EndIf
     \EndFor
-    
-    \State \Return $BestSol$
+
+    \Statex \Comment{// Selection \& Reproduction}
+    \State $NewPopulation \gets [\ ]$
+
+    \Statex \Comment{// Elitism: keep the current best}
+    \State $\Call{Append}{NewPopulation, BestSol}$
+
+    \While{$|NewPopulation| < N_{\text{pop}}$}
+        \State $Parent1 \gets \Call{Select}{Population, FitnessScores}$ \Comment{e.g., tournament}
+        \State $Parent2 \gets \Call{Select}{Population, FitnessScores}$
+
+        \Statex \Comment{// Crossover}
+        \If{$\Call{Random}{0,1} < P_c$}
+            \State $Child \gets \Call{Crossover}{Parent1, Parent2}$ \Comment{e.g., POX/OX}
+        \Else
+            \State $Child \gets Parent1$
+        \EndIf
+
+        \Statex \Comment{// Mutation}
+        \If{$\Call{Random}{0,1} < P_m$}
+            \State $Child \gets \Call{Mutate}{Child}$ \Comment{e.g., swap}
+        \EndIf
+
+        \Statex \Comment{// Validity Check / Repair}
+        \If{$\Call{IsValidPrecedence}{Child, P}$}
+            \State $\Call{Append}{NewPopulation, Child}$
+        \Else
+            \State $Child \gets \Call{RepairToTopological}{Child, P}$
+            \State $\Call{Append}{NewPopulation, Child}$
+        \EndIf
+    \EndWhile
+
+    \State $Population \gets NewPopulation$
+\EndFor
+
+\State \Return $(BestSol, C_{\min})$
+\Statex \textbf{END}
 \end{algorithmic}
 \end{algorithm}
-
 
 
 \par
@@ -455,6 +501,28 @@ The \cref{alg:ga_ualbp2} has been developed using the programming language Pytho
 \subsubsection{Constructive Heuristic}
 
 When tackling the Type-2 U-Shaped Assembly Line Balancing Problem (UALBP-2), where the aim is to reduce the cycle time for a predetermined number of stations, a major difficulty is that of making the sequence feasible. One of the solutions proposed is to implement topological sorting-based constructive heuristic within the Genetic Algorithm, which draws upon the dependency graph to produce a precedence-feasible list of tasks. This topological ordering not only guides the decoding phase with its precedence constraints but also facilitates the search for the best cycle time by allowing task assignment at either end of the stations.
+\begin{algorithm}[H]
+\caption{InitializePopulationTopological (Random Topological Sort)}
+\label{alg:init_topo}
+\begin{algorithmic}[1]
+\Require Population size $PopSize$, precedence graph $G=(V,E)$
+\Ensure Initial population $P$
+
+\State $P \gets [\,]$
+\For{$p \gets 1$ \textbf{to} $PopSize$}
+    \State $\pi \gets [\,]$
+    \State $S \gets \{v \in V \mid indeg(v)=0\}$ \Comment{Eligible nodes}
+    \While{$S \neq \emptyset$}
+        \State select $u$ uniformly at random from $S$
+        \State append $u$ to $\pi$
+        \State remove $u$ from $S$ and update indegrees of its successors
+        \State add any newly zero-indegree nodes to $S$
+    \EndWhile
+    \State append $\pi$ to $P$
+\EndFor
+\State \Return $P$
+\end{algorithmic}
+\end{algorithm}
 
 
 
@@ -504,6 +572,25 @@ Therefore, solutions with smaller cycle times are awarded higher fitness values.
 The selection of parents is done by using the tournament selection method of size 2.This has been found efficient for combinatorial optimization problems where the fitness landscape includes many plateaus. The strategy of selection by tournaments is regarded as highly effective for combinatorial optimization problems that have tough fitness landscapes with many plateaus. Tournament selection not only preserves genetic diversity but also avoids a common problem seen in roulette-wheel selection, which is the sensitivity to scaling.
 \cite{BlickleThiele1996}
 
+\begin{algorithm}[H]
+\caption{TournamentSelection ($k=2$)}
+\label{alg:tournament}
+\begin{algorithmic}[1]
+\Require Population $P$, fitness array $F$, tournament size $k=2$
+\Ensure Selected parent permutation
+
+\State $BestFit \gets -\infty$
+\State $BestIndex \gets -1$
+\For{$r \gets 1$ \textbf{to} $k$}
+    \State $i \gets$ random index in $\{1,\dots,|P|\}$
+    \If{$F[i] > BestFit$}
+        \State $BestFit \gets F[i]$
+        \State $BestIndex \gets i$
+    \EndIf
+\EndFor
+\State \Return $P[BestIndex]$
+\end{algorithmic}
+\end{algorithm}
 
 
 
@@ -519,6 +606,38 @@ The POX operator proceeds as follows:
 \end{enumerate}
 
 This procedure preserves major subsequences from both parents and typically reduces the need for extensive repair operations. POX is particularly suitable for UALBP-2 because tight precedence constraints make it crucial to keep coherent task blocks intact.
+\begin{algorithm}[H]
+\caption{POXCrossover (Precedence-Preserving Order Crossover)}
+\label{alg:pox}
+\begin{algorithmic}[1]
+\Require Parent permutations $P_1$, $P_2$
+\Ensure Child permutation $Child$
+
+\State $ChosenTasks \gets \emptyset$
+\ForAll{task $x$ in $P_1$}
+    \If{$\Call{random}{} < 0.5$}
+        \State add $x$ to $ChosenTasks$
+    \EndIf
+\EndFor
+\If{$ChosenTasks = \emptyset$}
+    \State add one random task from $P_1$ to $ChosenTasks$
+\EndIf
+
+\State $Child \gets [\,]$
+\ForAll{task $x$ in $P_1$}
+    \If{$x \in ChosenTasks$}
+        \State append $x$ to $Child$
+    \EndIf
+\EndFor
+
+\ForAll{task $y$ in $P_2$}
+    \If{$y \notin ChosenTasks$}
+        \State append $y$ to $Child$
+    \EndIf
+\EndFor
+\State \Return $Child$
+\end{algorithmic}
+\end{algorithm}
 
 
 \subsubsection{Mutation Operator: Swap Mutation}
@@ -526,9 +645,47 @@ Swap mutation is employed as a simple mutation operator, where two randomly sele
 
 In permutation-based genetic algorithms, mutation is generally applied with a low probability (e.g., $0.05$--$0.10$) to balance exploration and stability \cite{goldberg_1989}.
 
+\begin{algorithm}[H]
+\caption{SwapMutation}
+\label{alg:swap}
+\begin{algorithmic}[1]
+\Require Permutation $Perm$
+\Ensure Mutated permutation $Perm$
+
+\State $n \gets |Perm|$
+\State choose distinct indices $i,j$ uniformly at random from $\{1,\dots,n\}$
+\State swap $Perm[i]$ and $Perm[j]$
+\State \Return $Perm$
+\end{algorithmic}
+\end{algorithm}
+
+
 \subsubsection{Repair Mechanism}
 
 After crossover and mutation, a lightweight repair operator is applied to every permutation. If a task is found to violate precedence by appearing before any of its predecessors, it is gradually shifted to the right until the violation is removed. This procedure restores a valid topological order while preserving the original permutation structure as much as possible.
+\begin{algorithm}[H]
+\caption{RepairToTopological (Lightweight Repair)}
+\label{alg:repair}
+\begin{algorithmic}[1]
+\Require Permutation $\pi$, precedence graph $G=(V,E)$
+\Ensure Repaired permutation $\pi$
+
+\State build an array $pos(\cdot)$ giving the index of each task in $\pi$
+\State $changed \gets \textbf{true}$
+\While{$changed$}
+    \State $changed \gets \textbf{false}$
+    \ForAll{$(u \rightarrow v) \in E$}
+        \If{$pos(u) > pos(v)$} \Comment{precedence violation}
+            \State remove $v$ from its current position in $\pi$
+            \State insert $v$ immediately after $u$ in $\pi$ \Comment{shift right}
+            \State update $pos(\cdot)$
+            \State $changed \gets \textbf{true}$
+        \EndIf
+    \EndFor
+\EndWhile
+\State \Return $\pi$
+\end{algorithmic}
+\end{algorithm}
 
 
 \subsubsection{Termination Criteria}
@@ -541,218 +698,11 @@ The proposed GA terminates when a pre-specified maximum number of generations is
 
 In this part, the paper showcases the outcomes derived from the Genetic Algorithm (GA) that was utilized for solving the ARC83 U-shaped Assembly Line Balancing Problem Type II (UALBP-2) benchmark instance. The results are based on several CSV outputs generated by the implementation, including global summaries, run-by-run statistics, detailed descriptions of the best solution, Top-10 individuals of the best run, and parameter tuning logs.
 
-\par
-\subsection{Global Performance Summary}
-
-The final parameter settings, which were in use during all the experiments, are written below as per GA\_summary\_results.csv:
-
-\begin{itemize}
-    \item Population size: 40
-    \item Generations: 300
-    \item Crossover rate: 0.7
-    \item Mutation rate: 0.1
-    \item Selection method: Tournament (k = 2)
-    \item Crossover method: POX (precedence-preserving)
-    \item Mutation method: Swap
-    \item Number of independent runs: 10
-\end{itemize}
-
-\par
-\subsection{Run-by-Run Analysis}
-
-\begin{table}[H]
-\centering
-\caption{Cycle Times Obtained from 10 Independent GA Runs}
-\begin{tabular}{c c}
-\toprule
-\noindent\textbf{Run} & \noindent\textbf{Cycle Time} \\
-\midrule
-1 & 6498 \\
-2 & 6476 \\
-3 & 6467 \\
-4 & 6544 \\
-5 & 6529 \\
-6 & 6510 \\
-7 & 6562 \\
-8 & 6522 \\
-9 & 6514 \\
-10 & 6562 \\
-\midrule
-\noindent\textbf{Best} & 6467 \\
-\noindent\textbf{Mean} & 6518.4 \\
-\noindent\textbf{Worst} & 6562 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-
-
-\begin{figure}[H]
-\centering
-\begin{tikzpicture}
-\begin{axis}[
-    width=13cm,
-    height=6cm,
-    xlabel={Run Number},
-    ylabel={Cycle Time},
-    ymin=6400, ymax=6600,
-    grid=major,
-    xtick={1,...,10},
-    ytick={6400,6450,6500,6550,6600},
-    title={Cycle Time per GA Run},
-    scaled y ticks=false,
-    y tick label style={/pgf/number format/fixed},
-    legend style={
-        at={(1.02,0.5)},
-        anchor=west,
-        draw=none
-    }
-]
-
-% -------------------------
-% GA run results (main line)
-% -------------------------
-\addplot[
-    mark=*,
-    blue,
-    thick
-] coordinates {
-    (1,6498)
-    (2,6476)
-    (3,6467)
-    (4,6544)
-    (5,6529)
-    (6,6510)
-    (7,6562)
-    (8,6522)
-    (9,6514)
-    (10,6562)
-};
-
-% -------------------------
-% Best line
-% -------------------------
-\addplot[
-    red,
-    dashed,
-    thick
-] coordinates {
-    (1,6467) (10,6467)
-};
-
-% -------------------------
-% Worst line
-% -------------------------
-\addplot[
-    red,
-    dashed,
-    thick
-] coordinates {
-    (1,6562) (10,6562)
-};
-
-% -------------------------
-% Average line
-% -------------------------
-\addplot[
-    red,
-    dashed,
-    thick
-] coordinates {
-    (1,6518.4) (10,6518.4)
-};
-
-\legend{GA Run Result, Best, Worst, Average}
-
-\end{axis}
-\end{tikzpicture}
-\caption{Instance ARC83 cycle time obtained in each of the 10 independent GA runs, including best, worst, and average values.}
-\end{figure}
-
-
-\begin{figure}[H]
-\centering
-\begin{tikzpicture}
-\begin{axis}[
-    width=17cm,
-    height=9cm,
-    xlabel={Run Number},
-    ylabel={Cycle Time},
-    ymin=12540, ymax=12552,
-    grid=major,
-    xtick={1,...,10},
-    ytick={12540,12542,12544,12546,12548,12550,12552},
-    title={Cycle Time per GA Run},
-    scaled y ticks=false,
-    y tick label style={/pgf/number format/fixed}
-]
-
-
-% -------------------------
-% GA run results (MAIN LINE)
-% -------------------------
-\addplot[
-    mark=*,
-    blue,
-    thick
-] coordinates {
-    (1,12542)
-    (2,12546)
-    (3,12549)
-    (4,12547)
-    (5,12549)
-    (6,12546)
-    (7,12550)
-    (8,12549)
-    (9,12550)
-    (10,12543)
-};
-
-% -------------------------
-% Best line
-% -------------------------
-\addplot[
-    red,
-    dashed,
-    thick
-] coordinates {
-    (1,12542) (10,12542)
-};
-
-% -------------------------
-% Worst line
-% -------------------------
-\addplot[
-    red,
-    dashed,
-    thick
-] coordinates {
-    (1,12550) (10,12550)
-};
-
-% -------------------------
-% Average line
-% -------------------------
-\addplot[
-    red,
-    dashed,
-    thick
-] coordinates {
-    (1,12547.1) (10,12547.1)
-};
-
-\legend{GA Run Result, Best, Worst, Average}
-
-\end{axis}
-\end{tikzpicture}
-\caption{Instance ARC111, Cycle time obtained in each of the 10 independent GA runs, including best, worst, and average values.}
-\end{figure}
-
 
 \par
 \subsection{Parameter Tuning}
 
-The reason we focused particularly on the crossover and mutation parameters in the fine-tuning study is that these two operators directly control the diversification and intensification mechanisms of the GA. Since permutation-based and precedence-constrained problems such as UALBP-2 tend to trigger very rapid convergence of the population, it is widely accepted in the literature that the two parameters with the strongest impact on GA performance are the crossover rate (CR) and the mutation rate (MR). Therefore, a full-factorial grid search was conducted by testing eight mutation rate levels (0.005, 0.01, 0.02, 0.04, 0.06, 0.08, 0.12, 0.20) and eight crossover rate levels (0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.90, 0.98), resulting in 64 parameter combinations. Each configuration was evaluated using the best cycle time obtained over 5 independent runs (best\_cycle\_over\_5\_runs), enabling a systematic comparison of the exploration–exploitation balance across low-to-high MR and CR regimes.
+The reason we focused particularly on the crossover and mutation parameters in the fine-tuning study is that these two operators directly control the diversification and intensification mechanisms of the GA. Since permutation-based and precedence-constrained problems such as UALBP-2 tend to trigger very rapid convergence of the population, it is widely accepted in the literature that the two parameters with the strongest impact on GA performance are the crossover rate (CR) and the mutation rate (MR)\cite{potts_vandevelde_1995}. Therefore, a full-factorial grid search was conducted by testing eight mutation rate levels (0.005, 0.01, 0.02, 0.04, 0.06, 0.08, 0.12, 0.20) and eight crossover rate levels (0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.90, 0.98), resulting in 64 parameter combinations. Each configuration was evaluated using the best cycle time obtained over 5 independent runs (best\_cycle\_over\_5\_runs), enabling a systematic comparison of the exploration–exploitation balance across low-to-high MR and CR regimes.
 
 \begin{figure}[H]
 \centering
@@ -873,7 +823,7 @@ x  y  best
 
 \end{axis}
 \end{tikzpicture}
-\caption{Heatmap of the best cycle time for each mutation crossover combination.}
+\caption{Heatmap of the best cycle time for each mutation crossover combination run for instance ARC83.}
 \label{fig:heatmap_full_cr_mr}
 \end{figure}
 
@@ -884,6 +834,138 @@ The results indicate that the mutation rate is the dominant factor affecting sol
 Although mutation had the strongest influence, the crossover rate also showed a secondary but noticeable effect, particularly when combined with sufficiently high mutation. The best-performing region was observed where MR was moderate-to-high (e.g., $0.04$--$0.20$). In this interval, relatively lower crossover values (CR $=0.55$--$0.70$) produced the best results, repeatedly reaching the minimum cycle time of 6467. For example, the combination MR $=0.08$ and CR $=0.70$ attained this minimum value, whereas increasing CR to $0.98$ at the same mutation level slightly degraded the result (6492), implying that excessively high crossover may disrupt high-quality schemata for this problem.
 
 Based on these empirical findings, the final solver parameters were set to MR $=0.08$ and CR $=0.70$. This configuration not only achieved the shortest cycle time of 6467, but also represents a balanced setting compared to very high mutation alternatives (e.g., MR $=0.20$), which may introduce excessive randomness. Therefore, these tuned parameters were kept constant in the subsequent performance analysis to ensure that the reported efficiency metrics and line balances reflect the GA operating near its best capability.
+
+\par
+\subsection{GA Parameter Settings}
+
+The final parameter settings, which were in use during all the experiments, are written below as per GA\_summary\_results.csv:
+
+\begin{itemize}
+    \item Population size: 40
+    \item Generations: 300
+    \item Crossover rate: 0.7
+    \item Mutation rate: 0.08
+    \item Selection method: Tournament (k = 2)
+    \item Crossover method: POX (precedence-preserving)
+    \item Mutation method: Swap
+    \item Number of independent runs: 10
+    \item Number of stations vary for instances.
+\end{itemize}
+
+
+\par
+
+\subsection{Run-by-Run Analysis}
+
+\begin{table}[H]
+\centering
+\caption{Cycle Times Obtained from 10 Independent GA Runs}
+\begin{tabular}{c c}
+\toprule
+\noindent\textbf{Run} & \noindent\textbf{Cycle Time} \\
+\midrule
+1 & 6498 \\
+2 & 6476 \\
+3 & 6467 \\
+4 & 6544 \\
+5 & 6529 \\
+6 & 6510 \\
+7 & 6562 \\
+8 & 6522 \\
+9 & 6514 \\
+10 & 6562 \\
+\midrule
+\noindent\textbf{Best} & 6467 \\
+\noindent\textbf{Mean} & 6518.4 \\
+\noindent\textbf{Worst} & 6562 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    width=13cm,
+    height=6cm,
+    xlabel={Run Number},
+    ylabel={Cycle Time},
+    ymin=6400, ymax=6600,
+    grid=major,
+    xtick={1,...,10},
+    ytick={6400,6450,6500,6550,6600},
+    title={Cycle Time per GA Run},
+    scaled y ticks=false,
+    y tick label style={/pgf/number format/fixed},
+    legend style={
+        at={(1.02,0.5)},
+        anchor=west,
+        draw=none
+    }
+]
+
+% -------------------------
+% GA run results (main line)
+% -------------------------
+\addplot[
+    mark=*,
+    blue,
+    thick
+] coordinates {
+    (1,6498)
+    (2,6476)
+    (3,6467)
+    (4,6544)
+    (5,6529)
+    (6,6510)
+    (7,6562)
+    (8,6522)
+    (9,6514)
+    (10,6562)
+};
+
+% -------------------------
+% Best line
+% -------------------------
+\addplot[
+    red,
+    dashed,
+    thick
+] coordinates {
+    (1,6467) (10,6467)
+};
+
+% -------------------------
+% Worst line
+% -------------------------
+\addplot[
+    red,
+    dashed,
+    thick
+] coordinates {
+    (1,6562) (10,6562)
+};
+
+% -------------------------
+% Average line
+% -------------------------
+\addplot[
+    red,
+    dashed,
+    thick
+] coordinates {
+    (1,6518.4) (10,6518.4)
+};
+
+\legend{GA Run Result, Best, Worst, Average}
+
+\end{axis}
+\end{tikzpicture}
+\caption{Instance ARC83 cycle time obtained in each of the 10 independent GA runs, including best, worst, and average values.}
+\end{figure}
+
 
 
 \par
@@ -980,11 +1062,11 @@ Typical for U-shaped lines:
     \item Middle stations group flexible tasks
 \end{itemize}
 
-Overall, the load distribution closely matches patterns observed in high-quality UALBP-2 solutions in the literature.
+Overall, the load distribution closely matches patterns observed in high-quality UALBP-2 solutions in the literature\cite{becker_scholl_2006_generalized_survey}.
 
 \subsubsection{Task Sequence Characteristics}
 
-The task sequences for the most optimal assignment show the successful operation of precedence-preserving mechanisms:
+The task sequences for the best assignment show the successful operation of precedence-preserving mechanisms:
 
 \begin{itemize}
     \item No violations of predecessor or successor constraints
@@ -999,46 +1081,46 @@ The POX crossover and topological repair operators worked in unison to keep feas
 
 \begin{table}[H]
 \centering
-\caption{GA Performance Summary for Solved Benchmark Instances}\label{tab:ga_performance_summary}
+\caption{GA Statistics for Solved Benchmark Instances}\label{tab:ga_performance_summary}
 
 \resizebox{\textwidth}{!}{
-\begin{tabular}{lccccc}
+\begin{tabular}{lccccc c}
 \toprule
 \textbf{Instance} &
 \textbf{Best Cycle Time} &
 \textbf{Average Cycle Time} &
 \textbf{Worst Cycle Time} &
-\textbf{Avg. Runtime (s)} \\
+\textbf{Avg. Runtime (s)} &
+\textbf{Number of Tasks ($n$)} \\
 \midrule
-ARC83      & 6467  & 6520.4 & 6562  & 26.836 \\
-ARC111     & 12542 & 12547.1 & 12550 & 42.870 \\
-GUNTHER    & 44    & 44.0   & 44    & 5.657 \\
-BARTHOLD   & 470   & 470.9  & 471   & 41.965 \\
-BARTHOL2   & 159   & 159.0  & 159   & 63.846 \\
-SCHOLL     & 1818  & 1823.8 & 1829  & 290.926 \\
-LUTZ1      & 1400  & 1400.0 & 1400  & 7.858 \\
-LUTZ3      & 548   & 548.0  & 548   & 8.583 \\
-SAWYER30   & 47    & 47.0   & 47    & 3.348 \\
-TONGE70    & 209   & 209.8  & 210   & 22.214 \\
+ARC83      & 6467  & 6520.4 & 6562  & 26.836  & 83  \\
+ARC111     & 12542 & 12547.1 & 12550 & 42.870  & 111 \\
+GUNTHER    & 44    & 44.0   & 44    & 5.657   & 35  \\
+BARTHOLD   & 470   & 470.9  & 471   & 41.965  & 148 \\
+BARTHOL2   & 159   & 159.0  & 159   & 63.846  & 148 \\
+SCHOLL     & 1818  & 1823.8 & 1829  & 290.926 & 279 \\
+LUTZ1      & 1400  & 1400.0 & 1400  & 7.858   & 32  \\
+LUTZ3      & 548   & 548.0  & 548   & 8.583   & 89  \\
+SAWYER30   & 47    & 47.0   & 47    & 3.348   & 30  \\
+TONGE70    & 209   & 209.8  & 210   & 22.214  & 70  \\
 \bottomrule
 \end{tabular}
 }
 
 \end{table}
 
-Table~\ref{tab:ga_performance_summary} presents a comparative performance summary of the proposed Genetic Algorithm across ten benchmark U-shaped Assembly Line Balancing Problem instances. For each instance, the best, average, and worst cycle times obtained over 10 independent runs are reported together with the average computational time. The results indicate that the GA consistently achieves optimal or near-optimal solutions with low variance across repeated runs, demonstrating both robustness and repeatability. For small- and medium-sized instances such as GUNTHER, SAWYER30, LUTZ1, and LUTZ3, the algorithm reaches the known optimal cycle time in all runs, while for larger and more complex benchmarks such as ARC83, ARC111, and SCHOLL, the obtained solutions remain very close to the optimum with modest optimality gaps. Although computational time increases with problem size and precedence complexity, the overall solution times remain reasonable, confirming the effectiveness of the proposed GA for solving UALBP-2 instances of varying scales.
 
-Several strong conclusions can be drawn from the experimental results:
 
-Several strong conclusions can be drawn from the experimental results:
+Although the problem complexity cannot be characterized solely by a single metric, the number of tasks (n) provides a reasonable first-order measure of instance size. In addition, the presence of precedence constraints significantly increases the difficulty of the problem by restricting the set of feasible task permutations. Table~\cref{tab:ga_performance_summary} summarizes the overall performance of the proposed Genetic Algorithm (GA) on several widely used UALBP benchmark instances. The results obtained clearly demonstrate that the algorithm can produce high-quality and stable solutions under different problem sizes and structural characteristics.
 
-\begin{itemize}
-    \item The low variance of cycle times across independent runs indicates high reliability and repeatability of the proposed GA.
-    \item For several benchmark instances, the algorithm consistently reaches the best solution in all runs, demonstrating strong convergence behavior ( small instances).
-    \item For large and complex instances, the GA produces solutions very close to the optimum with limited dispersion, highlighting its robustness under tight precedence constraints.
-    \item Runtime results show a clear dependency on problem size and complexity, while maintaining stable execution times across repeated runs.
-    \item Overall, the GA effectively exploits the flexibility of U-shaped assembly lines and handles complex precedence structures without sacrificing solution quality.
-\end{itemize}
+A key observation is that the difference between the best, average, and worst run times is quite small for almost all examples. For some problems, such as GUNTHER, BARTHOL2, LUTZ1, LUTZ3, and SAWYER30, the GA converged to the same solution in each independent run, resulting in identical best, average, and worst values. This demonstrates that the algorithm exhibits a high level of robustness and repeatability, and that the proposed representation, operators, and parameter settings effectively guide the search towards strong local optima, avoiding excessive randomness.
+
+In larger and more complex examples such as ARC83, ARC111, SCHOLL, and TONGE70, slightly wider but still limited variability was observed between runs. In these cases, the average cycle times remained quite close to the best values, confirming that the algorithm delivers stable performance even in more challenging priority structures. The fact that the worst-case results do not deviate significantly from the average supports the reliability of the GA despite its stochastic nature.
+
+In terms of computational cost, the reported average processing times remain at reasonable levels for all samples. While small-scale problems can be solved within a few seconds, larger and more complex examples naturally require more computation time. However, even in the most challenging cases, the processing times obtained remain within practical limits for offline assembly line design and analysis. This indicates a positive balance between solution quality and computational cost.
+
+Furthermore, the obtained line efficiency values indicate that the stations operate at largely high occupancy rates, pointing to an effective workload distribution with limited idle time. Thus, the solutions are not only competitive in terms of cycle time but also offer operationally acceptable configurations in terms of assembly line balancing. All these findings confirm that the selected parameter configuration and priority-preserving genetic operators provide a reliable and effective framework for solving UALBP-2 problems.
+
 
 % % ---------- Read CSV once ----------
 % \pgfplotstableread[
@@ -1149,6 +1231,21 @@ In summary, the project uses mathematical modeling and evolutionary computation 
 
 \appendix
 \newpage
+
+
+
+
+\section{Python Source Code}
+% Buraya GA ve tuning kodunu ekleyeceğim.
+\begin{lstlisting}[style=atomone, caption={Simple Python Example}]
+def add(a, b):
+    return a + b
+
+print(add(3, 5))
+\end{lstlisting}
+
+
+
 
 % ---------- PART 1 ----------
 \begin{table*}[t]
@@ -1403,15 +1500,111 @@ Run & BestCycle & Runtime (s) \\
 
 
 
-\section{Python Source Code}
-% Buraya GA ve tuning kodunu ekleyeceğim.
-\begin{lstlisting}[style=atomone, caption={Simple Python Example}]
-def add(a, b):
-    return a + b
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    width=17cm,
+    height=9cm,
+    xlabel={Run Number},
+    ylabel={Cycle Time},
+    ymin=12540, ymax=12552,
+    grid=major,
+    xtick={1,...,10},
+    ytick={12540,12542,12544,12546,12548,12550,12552},
+    title={Cycle Time per GA Run},
+    scaled y ticks=false,
+    y tick label style={/pgf/number format/fixed}
+]
 
-print(add(3, 5))
-\end{lstlisting}
 
+% -------------------------
+% GA run results (MAIN LINE)
+% -------------------------
+\addplot[
+    mark=*,
+    blue,
+    thick
+] coordinates {
+    (1,12542)
+    (2,12546)
+    (3,12549)
+    (4,12547)
+    (5,12549)
+    (6,12546)
+    (7,12550)
+    (8,12549)
+    (9,12550)
+    (10,12543)
+};
+
+% -------------------------
+% Best line
+% -------------------------
+\addplot[
+    red,
+    dashed,
+    thick
+] coordinates {
+    (1,12542) (10,12542)
+};
+
+% -------------------------
+% Worst line
+% -------------------------
+\addplot[
+    red,
+    dashed,
+    thick
+] coordinates {
+    (1,12550) (10,12550)
+};
+
+% -------------------------
+% Average line
+% -------------------------
+\addplot[
+    red,
+    dashed,
+    thick
+] coordinates {
+    (1,12547.1) (10,12547.1)
+};
+
+\legend{GA Run Result, Best, Worst, Average}
+
+\end{axis}
+\end{tikzpicture}
+\caption{Instance ARC83, Cycle time obtained in each of the 10 independent GA runs, including best, worst, and average values.}
+\end{figure}
+
+
+\begin{figure}[h!]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    width=12cm,
+    height=8cm,
+    grid=both,
+    xlabel={$x$},
+    ylabel={$y$},
+]
+\addplot[
+    color=blue,
+    mark=.,
+]
+table[
+    col sep=comma,
+    x=Generation,
+    y=BestSoFar,
+    restrict expr to domain={\coordindex}{0:299}
+] {data.csv};
+
+\legend{Veri}
+\end{axis}
+\end{tikzpicture}
+\caption{CSV dosyasından çizilen grafik}
+\end{figure}
 
 
 \end{document}
