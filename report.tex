@@ -34,8 +34,10 @@
 \usepackage{caption}
 
 \usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning}
 \usepackage[table]{xcolor}
 \usepackage{pgfplots}
+%\pgfplotsset{compat=1.18}
 \usepackage{pgfplotstable}
 % Linkleri düzenlemek için
 \usepackage[hidelinks]{hyperref}
@@ -72,8 +74,11 @@
 % Fonksiyon isimleri için ufak bir kolaylık
 \newcommand{\Func}[1]{\textcolor{richmaroonxd}{#1}}
 \usepackage{listings}
-\usepackage{xcolor}
+\usepackage{float}
+\floatplacement{listing}{H}
 
+\usepackage{xcolor}
+\usepackage{xparse}
 % Atom One Light renkleri
 \definecolor{atom-bg}{HTML}{FAFAFA}
 \definecolor{atom-blue}{HTML}{007ACC}
@@ -83,6 +88,7 @@
 \definecolor{atom-orange}{HTML}{D16969}
 
 \lstdefinestyle{atomone}{
+    language=Python, % <-- bunu ekle
     backgroundcolor=\color{atom-bg},
     basicstyle=\ttfamily\small,
     keywordstyle=\color{atom-blue}\bfseries,
@@ -97,17 +103,11 @@
     tabsize=4,
     showstringspaces=false,
     breaklines=true,
-    emph={
-        True, False, None,
-        int, float, str, list, dict, set, tuple,
-        range, len, print, return
-    },
+    emph={True, False, None, int, float, str, list, dict, set, tuple, range, len, print, return},
     emphstyle=\color{atom-purple}\bfseries,
-    moredelim=**[is][\color{atom-orange}]{@}{@}  % özel vurgular için
+    moredelim=**[is][\color{atom-orange}]{@}{@}
 }
-
-% Kolay kullanım komutu
-\newcommand{\pythoncode}[2]{
+\NewDocumentCommand{\pythoncode}{m +v}{
 \begin{lstlisting}[style=atomone,caption={#1}]
 #2
 \end{lstlisting}
@@ -132,6 +132,50 @@
 % =========================
 \renewcommand{\thesection}{\arabic{section}}
 \renewcommand{\thesubsection}{\arabic{section}.\arabic{subsection}}
+\definecolor{stationfill}{RGB}{160,222,242}
+
+\tikzset{
+  station/.style={
+    draw,
+    rounded corners=2pt,
+    minimum width=32mm,
+    minimum height=8mm,
+    align=center,
+    fill=stationfill
+  },
+  flow/.style={-Latex, line width=0.6pt}
+}
+
+\newcommand{\UFlowRun}[3]{%
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[font=\small]
+
+\foreach[count=\stidx from 1] \seq in {#3}{
+  \ifnum\stidx<7
+    \pgfmathsetmacro{\x}{0}
+    \pgfmathsetmacro{\y}{-(\stidx-1)*1.25}
+  \else
+    \pgfmathsetmacro{\x}{6.2}
+    \pgfmathsetmacro{\y}{-(12-\stidx)*1.25}
+  \fi
+
+  \node[station] (R#1S\stidx) at (\x,\y) {%
+    \textbf{Individual #1 -- S\stidx}\\[-1pt]
+    \scriptsize \seq
+  };
+}
+
+\foreach \i in {1,...,11}{
+  \pgfmathtruncatemacro{\j}{\i+1}
+  \draw[flow] (R#1S\i) -- (R#1S\j);
+}
+
+\end{tikzpicture}
+\caption{U-shaped 12-station assignment for ARC83 (Individual #1, Fitness = #2).}
+\label{fig:arc83-ind#1}
+\end{figure}
+}
 
 % =========================
 % Başlık bilgileri
@@ -496,6 +540,7 @@ The file structure is organized as follows: the initial lines represent the dura
 
 The \cref{alg:ga_ualbp2} has been developed using the programming language Python due to its excellent high-level data structure handling ability.
 
+The complete implementation by Python is provided in Appendix~\cref{app:ga-code}.
 
 \par
 \subsubsection{Constructive Heuristic}
@@ -835,6 +880,216 @@ Although mutation had the strongest influence, the crossover rate also showed a 
 
 Based on these empirical findings, the final solver parameters were set to MR $=0.08$ and CR $=0.70$. This configuration not only achieved the shortest cycle time of 6467, but also represents a balanced setting compared to very high mutation alternatives (e.g., MR $=0.20$), which may introduce excessive randomness. Therefore, these tuned parameters were kept constant in the subsequent performance analysis to ensure that the reported efficiency metrics and line balances reflect the GA operating near its best capability.
 
+
+
+
+\begin{figure}[h!]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    width=12cm,
+    height=8cm,
+    grid=both,
+    xlabel={$iteration$},
+    ylabel={$Cycle time$},
+]
+\addplot[
+    color=blue,
+    mark=.,
+]
+table[
+    col sep=comma,
+    x=Generation,
+    y=BestSoFar,
+    restrict expr to domain={\coordindex}{1500:1799}
+] {data.csv};
+
+\legend{Best Cycle Time So Far}
+\end{axis}
+\end{tikzpicture}
+\caption{Convergence graph for ARC83}
+\label{fig:csv-graph_arc83}
+\end{figure}
+
+ 
+As seen in \cref{fig:csv-graph_arc83} and \cref{fig:arc83-conv-1,fig:arc83-conv-2,fig:arc83-conv-3}, the best-so-far cycle time decreases rapidly during the early iterations, followed by stepwise improvements characterized by long plateaus and occasional sudden drops when better solutions are found. Toward the later iterations, improvements become marginal and infrequent, indicating that the genetic algorithm converges to near-stationary, similar-quality solutions for the ARC83 instance.
+
+
+
+\begin{figure}[h!]
+\centering
+
+\begin{subfigure}[t]{0.32\textwidth}
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    width=\textwidth, height=5cm,
+    grid=both,
+    xlabel={}, ylabel={},
+]
+\addplot[color=blue, mark=.] table[
+    col sep=comma, x=Generation, y=BestSoFar,
+    restrict expr to domain={\coordindex}{0:299}
+] {data.csv};
+\end{axis}
+\end{tikzpicture}
+\caption{0--299}\label{fig:arc83-1}
+\end{subfigure}\hfill
+\begin{subfigure}[t]{0.32\textwidth}
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    width=\textwidth, height=5cm,
+    grid=both,
+    xlabel={}, ylabel={},
+]
+\addplot[color=blue, mark=.] table[
+    col sep=comma, x=Generation, y=BestSoFar,
+    restrict expr to domain={\coordindex}{300:599}
+] {data.csv};
+\end{axis}
+\end{tikzpicture}
+\caption{300--599}\label{fig:arc83-2}
+\end{subfigure}\hfill
+\begin{subfigure}[t]{0.32\textwidth}
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    width=\textwidth, height=5cm,
+    grid=both,
+    xlabel={}, ylabel={},
+]
+\addplot[color=blue, mark=.] table[
+    col sep=comma, x=Generation, y=BestSoFar,
+    restrict expr to domain={\coordindex}{600:899}
+] {data.csv};
+\end{axis}
+\end{tikzpicture}
+\caption{600--899}\label{fig:arc83-3}
+\end{subfigure}
+
+\caption{Convergence graphs for ARC83 (Best cycle time so far) - Part 1}
+\label{fig:arc83-conv-1}
+\end{figure}
+
+\begin{figure}[h!]
+\centering
+
+\begin{subfigure}[t]{0.32\textwidth}
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    width=\textwidth, height=5cm,
+    grid=both,
+    xlabel={}, ylabel={},
+]
+\addplot[color=blue, mark=.] table[
+    col sep=comma, x=Generation, y=BestSoFar,
+    restrict expr to domain={\coordindex}{900:1199}
+] {data.csv};
+\end{axis}
+\end{tikzpicture}
+\caption{900--1199}\label{fig:arc83-4}
+\end{subfigure}\hfill
+\begin{subfigure}[t]{0.32\textwidth}
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    width=\textwidth, height=5cm,
+    grid=both,
+    xlabel={}, ylabel={},
+]
+\addplot[color=blue, mark=.] table[
+    col sep=comma, x=Generation, y=BestSoFar,
+    restrict expr to domain={\coordindex}{1200:1499}
+] {data.csv};
+\end{axis}
+\end{tikzpicture}
+\caption{1200--1499}\label{fig:arc83-5}
+\end{subfigure}\hfill
+\begin{subfigure}[t]{0.32\textwidth}
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    width=\textwidth, height=5cm,
+    grid=both,
+    xlabel={}, ylabel={},
+]
+\addplot[color=blue, mark=.] table[
+    col sep=comma, x=Generation, y=BestSoFar,
+    restrict expr to domain={\coordindex}{2700:2999}
+] {data.csv};
+\end{axis}
+\end{tikzpicture}
+\caption{2700--2999}\label{fig:arc83-10}
+\end{subfigure}
+
+
+
+\caption{Convergence graphs for ARC83 (Best cycle time so far) - Part 2}
+\label{fig:arc83-conv-2}
+\end{figure}
+
+
+\begin{figure}[h!]
+\centering
+
+\begin{subfigure}[t]{0.32\textwidth}
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    width=\textwidth, height=5cm,
+    grid=both,
+    xlabel={}, ylabel={},
+]
+\addplot[color=blue, mark=.] table[
+    col sep=comma, x=Generation, y=BestSoFar,
+    restrict expr to domain={\coordindex}{1800:2099}
+] {data.csv};
+\end{axis}
+\end{tikzpicture}
+\caption{1800--2099}\label{fig:arc83-7}
+\end{subfigure}\hfill
+\begin{subfigure}[t]{0.32\textwidth}
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    width=\textwidth, height=5cm,
+    grid=both,
+    xlabel={}, ylabel={},
+]
+\addplot[color=blue, mark=.] table[
+    col sep=comma, x=Generation, y=BestSoFar,
+    restrict expr to domain={\coordindex}{2100:2399}
+] {data.csv};
+\end{axis}
+\end{tikzpicture}
+\caption{2100--2399}\label{fig:arc83-8}
+\end{subfigure}\hfill
+\begin{subfigure}[t]{0.32\textwidth}
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    width=\textwidth, height=5cm,
+    grid=both,
+    xlabel={}, ylabel={},
+]
+\addplot[color=blue, mark=.] table[
+    col sep=comma, x=Generation, y=BestSoFar,
+    restrict expr to domain={\coordindex}{2400:2699}
+] {data.csv};
+\end{axis}
+\end{tikzpicture}
+\caption{2400--2699}\label{fig:arc83-9}
+\end{subfigure}
+
+\caption{Convergence graphs for ARC83 (Best cycle time so far) - Part 3}
+\label{fig:arc83-conv-3}
+\end{figure}
+
+
+
+
 \par
 \subsection{GA Parameter Settings}
 
@@ -882,6 +1137,7 @@ The final parameter settings, which were in use during all the experiments, are 
 \end{tabular}
 \end{table}
 
+Detailed run-by-run best cycle times and runtimes for each benchmark instance (10 independent runs) are reported in Appendix~\cref{app:run-by-run}, Table~\cref{tab:run_by_run_all}.
 
 
 \begin{figure}[H]
@@ -972,6 +1228,40 @@ The final parameter settings, which were in use during all the experiments, are 
 \subsection{Final Population and Top-10 Individuals}
 
 In addition to reporting the best cycle time per run, the final population of the best run is analysed in more detail. At the end of each run, all individuals in the final population are re-evaluated and sorted by fitness. For the best run, the Top-10 individuals are extracted and decoded.
+
+
+Here, Individuals 1 and 2 correspond to two of the top 10 individuals for the ARC83 instance.
+The remaining individuals/solutions (Individuals 3--10) are reported in Appendix~\cref{app:arc83-topten}.
+
+\UFlowRun{1}{0.000155}{
+1 2 4 5 8,
+3 6 10 13,
+9 7 14 25 12,
+19 24 17 22 18 23 29 21 11,
+27 28 32 36 34 33,
+38 35 37 40 30 31 15 20,
+39 43 44 46 26 41 45 47 49,
+69 70 72 71 73 48 50 51 52,
+53 54 55 56 57 58 59 60 61 62 63,
+64 65 66 67 68 75 74,
+76 16 42 77 78 79 80,
+82 81 83
+}
+\UFlowRun{2}{0.000153}{
+1 2 4 5 8,
+3 6 9,
+12 7 11 10 14 19,
+25 24 13 18 23 17 22 21 27,
+28 29 15 20 32 36 38,
+41 34 35 33 37 40 30 45,
+31 39 44 46 48 43 26 47,
+49 69 71 70 72 73 50 51 52,
+53 54 55 56 57 58 59 60 61 62 63,
+64 65 66 67 68 74 75,
+76 16 42 77 78 79 80,
+82 81 83
+}
+
 
 For each of these Top-10 individuals, the decoding procedure is applied using its own cycle time, and the following information is obtained:
 \begin{itemize}
@@ -1122,67 +1412,6 @@ In terms of computational cost, the reported average processing times remain at 
 Furthermore, the obtained line efficiency values indicate that the stations operate at largely high occupancy rates, pointing to an effective workload distribution with limited idle time. Thus, the solutions are not only competitive in terms of cycle time but also offer operationally acceptable configurations in terms of assembly line balancing. All these findings confirm that the selected parameter configuration and priority-preserving genetic operators provide a reliable and effective framework for solving UALBP-2 problems.
 
 
-% % ---------- Read CSV once ----------
-% \pgfplotstableread[
-%   col sep=comma,
-%   header=true
-% ]{ga_log.csv}\GATable
-
-% % Kaç run varsa onu yaz
-% \def\RUNCOUNT{10}
-
-% % ---------- One figure per run ----------
-% \foreach \r in {1,...,\RUNCOUNT}{
-% \begin{figure}[H]
-% \centering
-% \begin{tikzpicture}
-% \begin{axis}[
-%     width=0.95\linewidth,
-%     height=6.5cm,
-%     grid=major,
-%     xlabel={Generation},
-%     ylabel={Cycle Time},
-%     title={Convergence (Run \r)},
-%     legend style={at={(0.02,0.02)},anchor=south west,draw=none,fill=none},
-% ]
-% % Best-so-far
-% \addplot[
-%   thick
-% ] table[
-%   x=Generation,
-%   y=BestSoFar,
-%   discard if not={Run}{\r}
-% ]{\GATable};
-% \addlegendentry{Best so far}
-
-% % Best in generation
-% \addplot[
-%   thick,
-%   densely dashed
-% ] table[
-%   x=Generation,
-%   y=BestInGeneration,
-%   discard if not={Run}{\r}
-% ]{\GATable};
-% \addlegendentry{Best in generation}
-
-% % Mean cycle
-% \addplot[
-%   thick,
-%   dotted
-% ] table[
-%   x=Generation,
-%   y=MeanCycle,
-%   discard if not={Run}{\r}
-% ]{\GATable};
-% \addlegendentry{Mean}
-% \end{axis}
-% \end{tikzpicture}
-% \caption{Convergence curves for Run \r over 300 generations.}
-% \end{figure}
-
-% SDG BÖLÜMÜ
-
 \newpage
 \section{Contribution to Sustainable Development Goals}
 The proposed GA for UALBP-2 supports several United Nations Sustainable Development Goals (SDGs) by increasing production efficiency, improving resource utilisation, and promoting more sustainable industrial performance in line with the 2030 Agenda for Sustainable Development~~\cite{un_2030_agenda_2015}.
@@ -1229,32 +1458,671 @@ In summary, the project uses mathematical modeling and evolutionary computation 
 
 % EKLER
 
-\appendix
 \newpage
 
 
+\appendix
+\section{Genetic Algorithm Code for ARC83 (UALBP-II)}
+\label{app:ga-code}
+
+\begin{lstlisting}[style=atomone,
+caption={Python implementation of the genetic algorithm for the U-shaped assembly line balancing problem (UALBP-II) on the ARC83 instance.},
+label={lst:ga-arc83-full}]
+import random
+import math
+import time
+from typing import List, Tuple, Dict, Set
+import csv
+import os
+from datetime import datetime
+
+# =====================================================
+# KULLANICI AYARLARI
+# =====================================================
+INSTANCE_PATH     = "ARC83.IN2"   # IN2 dosyanin yolu
+M_STATIONS        = 12          # istasyon sayisi
+POP_SIZE          = 40
+GENERATIONS       = 300 #gorsellestirme
+CROSSOVER_RATE    = 0.7
+MUTATION_RATE     = 0.08
+RUNS              = 10         # GA kac kez calisacak
+BASE_SEED         = 0
+
+OPTIMAL_CYCLE     = 6467       # Excel'den bildigimiz optimum AMA SALBP ICIN
+
+# =====================================================
+# POX DEBUG AYARLARI
+# =====================================================
+DEBUG_POX         = False         # POX ornegi gormek istemezsen False yap
+POX_DEBUG_LIMIT   = 5            # En fazla kac crossover ornegi yazdirilsin
+pox_debug_counter = 0
 
 
-\section{Python Source Code}
-% Buraya GA ve tuning kodunu ekleyeceğim.
-\begin{lstlisting}[style=atomone, caption={Simple Python Example}]
-def add(a, b):
-    return a + b
+# =====================================================
+# 1) IN2 DOSYASINI OKUMA
+# =====================================================
 
-print(add(3, 5))
+def read_in2(path: str) -> Tuple[int, List[int], List[Tuple[int, int]]]:
+    with open(path, "r") as f:
+        lines = [line.strip() for line in f if line.strip()]
+
+    n = int(lines[0])
+
+    times = []
+    for i in range(1, n + 1):
+        times.append(int(lines[i]))
+
+    precedences = []
+    for line in lines[n + 1:]:
+        if "," in line:
+            a, b = line.split(",")
+        else:
+            a, b = line.split()
+        i = int(a)
+        j = int(b)
+        if i == -1 and j == -1:
+            break
+        precedences.append((i, j))
+
+    return n, times, precedences
+
+
+# =====================================================
+# 2) ONCUL / ARDIL KUMELERI
+# =====================================================
+
+def build_pred_succ(
+    n: int,
+    precedences: List[Tuple[int, int]]
+) -> Tuple[Dict[int, Set[int]], Dict[int, Set[int]]]:
+    preds = {i: set() for i in range(1, n + 1)}
+    succs = {i: set() for i in range(1, n + 1)}
+
+    for i, j in precedences:
+        preds[j].add(i)
+        succs[i].add(j)
+
+    return preds, succs
+
+
+# =====================================================
+# 3) TOPOLOJIK SIRALAMA + REPAIR
+# =====================================================
+
+def random_topological_sort(
+    n: int,
+    preds: Dict[int, Set[int]],
+    rng: random.Random
+) -> List[int]:
+    remaining = set(range(1, n + 1))
+    result = []
+    assigned = set()
+
+    while remaining:
+        eligible = [i for i in remaining if preds[i].issubset(assigned)]
+        if not eligible:
+            raise RuntimeError("Precedence graph contains a cycle?")
+        chosen = rng.choice(eligible)
+        result.append(chosen)
+        assigned.add(chosen)
+        remaining.remove(chosen)
+
+    return result
+
+
+def repair_to_topological(
+    perm: List[int],
+    preds: Dict[int, Set[int]]
+) -> List[int]:
+    rank = {task: idx for idx, task in enumerate(perm)}
+    remaining = set(perm)
+    result = []
+    placed = set()
+
+    while remaining:
+        eligible = [i for i in remaining if preds[i].issubset(placed)]
+        if not eligible:
+            eligible = list(remaining)
+        chosen = min(eligible, key=lambda x: rank[x])
+        result.append(chosen)
+        placed.add(chosen)
+        remaining.remove(chosen)
+
+    return result
+
+
+# =====================================================
+# 4) U-SHAPED DECODE + CYCLE TIME
+# =====================================================
+
+def is_task_eligible(
+    task: int,
+    assigned: Set[int],
+    preds: Dict[int, Set[int]],
+    succs: Dict[int, Set[int]]
+) -> bool:
+    return preds[task].issubset(assigned) or succs[task].issubset(assigned)
+
+
+def decode_with_cycle_limit(
+    perm: List[int],
+    times: List[int],
+    preds: Dict[int, Set[int]],
+    succs: Dict[int, Set[int]],
+    m: int,
+    c: int
+) -> Tuple[bool, List[List[int]], List[int]]:
+    n = len(perm)
+    assigned: Set[int] = set()
+    stations: List[List[int]] = [[] for _ in range(m)]
+    loads: List[int] = [0 for _ in range(m)]
+
+    station_idx = 0
+
+    while station_idx < m and len(assigned) < n:
+        progress = True
+        while progress and len(assigned) < n:
+            progress = False
+            for task in perm:
+                if task in assigned:
+                    continue
+                if not is_task_eligible(task, assigned, preds, succs):
+                    continue
+
+                duration = times[task - 1]
+                if loads[station_idx] + duration <= c:
+                    stations[station_idx].append(task)
+                    loads[station_idx] += duration
+                    assigned.add(task)
+                    progress = True
+        station_idx += 1
+
+    feasible = (len(assigned) == n)
+    return feasible, stations, loads
+
+
+def evaluate_permutation_cycle_time(
+    perm: List[int],
+    times: List[int],
+    preds: Dict[int, Set[int]],
+    succs: Dict[int, Set[int]],
+    m: int
+) -> Tuple[float, List[List[int]], List[int]]:
+    total_time = sum(times)
+    max_time = max(times)
+
+    lb = max(max_time, math.ceil(total_time / m))
+    ub = total_time
+
+    best_c = None
+    best_stations = None
+    best_loads = None
+
+    while lb <= ub:
+        mid = (lb + ub) // 2
+        feasible, stations, loads = decode_with_cycle_limit(
+            perm, times, preds, succs, m, mid
+        )
+        if feasible:
+            best_c = mid
+            best_stations = stations
+            best_loads = loads
+            ub = mid - 1
+        else:
+            lb = mid + 1
+
+    if best_c is None:
+        return float("inf"), [[] for _ in range(m)], [0 for _ in range(m)]
+
+    return float(best_c), best_stations, best_loads
+
+
+# =====================================================
+# 5) GA OPERATORLERI
+# =====================================================
+
+def tournament_selection(
+    population: List[List[int]],
+    fitness: List[float],
+    rng: random.Random,
+    k: int = 2
+) -> List[int]:
+    n = len(population)
+    best_idx = None
+    best_fit = -float("inf")
+    for _ in range(k):
+        i = rng.randrange(n)
+        if fitness[i] > best_fit:
+            best_fit = fitness[i]
+            best_idx = i
+    return population[best_idx][:]
+
+
+def pox_crossover(
+    p1: List[int],
+    p2: List[int],
+    rng: random.Random
+) -> List[int]:
+    """
+    POX crossover + istege bagli debug ciktilari.
+    """
+    global pox_debug_counter
+
+    chosen = set()
+    for gene in p1:
+        if rng.random() < 0.5:
+            chosen.add(gene)
+    if not chosen:
+        chosen.add(rng.choice(p1))
+
+    child = []
+    for gene in p1:
+        if gene in chosen:
+            child.append(gene)
+    for gene in p2:
+        if gene not in chosen:
+            child.append(gene)
+
+    # ---- Debug output ----
+    if DEBUG_POX and pox_debug_counter < POX_DEBUG_LIMIT:
+        pox_debug_counter += 1
+        print("\n=== POX CROSSOVER SAMPLE ===")
+        print("Parent1 (first 15):", p1[:15])
+        print("Parent2 (first 15):", p2[:15])
+        print("Chosen subset:", sorted(chosen))
+        print("Child   (first 15):", child[:15])
+        print("============================\n")
+
+    return child
+
+
+def swap_mutation(perm: List[int], rng: random.Random) -> List[int]:
+    n = len(perm)
+    i, j = rng.sample(range(n), 2)
+    perm[i], perm[j] = perm[j], perm[i]
+    return perm
+
+
+# =====================================================
+# 6) GA: TEK RUN + ISTATISTIK
+# =====================================================
+
+def genetic_algorithm_ualbp2(
+    n: int,
+    times: List[int],
+    preds: Dict[int, Set[int]],
+    succs: Dict[int, Set[int]],
+    m: int,
+    pop_size: int,
+    generations: int,
+    crossover_rate: float,
+    mutation_rate: float,
+    seed: int,
+    run_index: int
+):
+    rng = random.Random(seed)
+
+    population: List[List[int]] = []
+    for _ in range(pop_size):
+        perm = random_topological_sort(n, preds, rng)
+        population.append(perm)
+
+    best_perm = None
+    best_cycle = float("inf")
+    best_stations = None
+    best_loads = None
+
+    # ----- CONVERGENCE KAYDI (jenerasyon bazli) -----
+    history_best_so_far = []
+    history_best_gen = []
+    history_mean_gen = []
+
+    for gen in range(generations):
+        fitness_vals = []
+        eval_cache = {}
+
+        for perm in population:
+            key = tuple(perm)
+            if key in eval_cache:
+                cycle_time = eval_cache[key]
+            else:
+                cycle_time, stations, loads = evaluate_permutation_cycle_time(
+                    perm, times, preds, succs, m
+                )
+                eval_cache[key] = cycle_time
+                if cycle_time < best_cycle:
+                    best_cycle = cycle_time
+                    best_perm = perm[:]
+                    best_stations = stations
+                    best_loads = loads
+
+            if math.isinf(eval_cache[key]):
+                fit = 0.0
+            else:
+                fit = 1.0 / eval_cache[key]
+            fitness_vals.append(fit)
+
+        gen_cycles = list(eval_cache.values())
+        gen_best = min(gen_cycles)
+        gen_mean = sum(gen_cycles) / len(gen_cycles)
+
+        history_best_gen.append(gen_best)
+        history_mean_gen.append(gen_mean)
+        history_best_so_far.append(best_cycle)
+
+        new_population: List[List[int]] = []
+        if best_perm is not None:
+            new_population.append(best_perm[:])
+
+        while len(new_population) < pop_size:
+            p1 = tournament_selection(population, fitness_vals, rng, k=2)
+            p2 = tournament_selection(population, fitness_vals, rng, k=2)
+
+            if rng.random() < crossover_rate:
+                child = pox_crossover(p1, p2, rng)
+            else:
+                child = p1[:]
+
+            if rng.random() < mutation_rate:
+                child = swap_mutation(child, rng)
+
+            child = repair_to_topological(child, preds)
+            new_population.append(child)
+
+        population = new_population
+
+    # ----- RUN SONU: final populasyon istatistikleri -----
+    final_stats = []
+    cycles = []
+    fits = []
+
+    for perm in population:
+        cycle_time, _, _ = evaluate_permutation_cycle_time(
+            perm, times, preds, succs, m
+        )
+        fit = 0.0 if math.isinf(cycle_time) else 1.0 / cycle_time
+        cycles.append(cycle_time)
+        fits.append(fit)
+        final_stats.append((fit, cycle_time, perm))
+
+    best_cycle_final = min(cycles)
+    worst_cycle_final = max(cycles)
+    mean_cycle_final = sum(cycles) / len(cycles)
+
+    best_fit_final = max(fits)
+    worst_fit_final = min(fits)
+    mean_fit_final = sum(fits) / len(fits)
+
+    final_stats.sort(key=lambda x: x[0], reverse=True)
+    top10 = final_stats[:10]
+
+    run_stats = {
+        "best_cycle": best_cycle,
+        "final_best_cycle": best_cycle_final,
+        "final_mean_cycle": mean_cycle_final,
+        "final_worst_cycle": worst_cycle_final,
+        "final_best_fit": best_fit_final,
+        "final_mean_fit": mean_fit_final,
+        "final_worst_fit": worst_fit_final,
+        "top10": top10,
+        "history_best_so_far": history_best_so_far,
+        "history_best_gen": history_best_gen,
+        "history_mean_gen": history_mean_gen,
+    }
+
+    return best_perm, best_cycle, best_stations, best_loads, run_stats
+
+
+# =====================================================
+# 7) COKLU RUN + OZET
+# =====================================================
+
+def main():
+    start_time = time.time()
+
+    n, times, precedences = read_in2(INSTANCE_PATH)
+    preds, succs = build_pred_succ(n, precedences)
+
+    total_time = sum(times)
+    max_time = max(times)
+    lb1 = math.ceil(total_time / M_STATIONS)
+    lb2 = max_time
+    lb = max(lb1, lb2)
+
+    print(f"Instance: {INSTANCE_PATH}")
+    print(f"Tasks (n)              : {n}")
+    print(f"Stations (m)           : {M_STATIONS}")
+    print(f"Total work content sum : {total_time}")
+    print(f"Max task time          : {max_time}")
+    print(f"Lower bound LB1=ceil(sum/m) = {lb1}")
+    print(f"Lower bound LB2=max(t_i)    = {lb2}")
+    print(f"Overall theoretical LB       = {lb}")
+    print()
+
+    all_convergence_rows = []
+    run_best_cycles = []
+    run_runtimes = []
+    best_overall_cycle = float("inf")
+    best_overall_solution = None
+    best_overall_top10 = None
+
+    for r in range(1, RUNS + 1):
+        seed = BASE_SEED + r
+        print(f"\n============================")
+        print(f"        RUN {r}/{RUNS}")
+        print(f"============================")
+        run_start = time.time()
+
+        best_perm, best_cycle, best_stations, best_loads, stats = genetic_algorithm_ualbp2(
+            n=n,
+            times=times,
+            preds=preds,
+            succs=succs,
+            m=M_STATIONS,
+            pop_size=POP_SIZE,
+            generations=GENERATIONS,
+            crossover_rate=CROSSOVER_RATE,
+            mutation_rate=MUTATION_RATE,
+            seed=seed,
+            run_index=r
+        )
+
+        hb  = stats["history_best_so_far"]
+        hbg = stats["history_best_gen"]
+        hm  = stats["history_mean_gen"]
+
+        for g in range(GENERATIONS):
+            all_convergence_rows.append([r, g + 1, hb[g], hbg[g], hm[g]])
+
+        run_end = time.time()
+        run_runtime = run_end - run_start
+
+        run_best_cycles.append(best_cycle)
+        run_runtimes.append(run_runtime)
+
+        print(f"\nRun {r} summary:")
+        print(f"  Best cycle time over generations      : {best_cycle}")
+        print(f"  Final population best / mean / worst c: "
+              f"{stats['final_best_cycle']} / {stats['final_mean_cycle']:.2f} / {stats['final_worst_cycle']}")
+        print(f"  Final population best / mean / worst fitness: "
+              f"{stats['final_best_fit']:.6f} / {stats['final_mean_fit']:.6f} / {stats['final_worst_fit']:.6f}")
+
+        print("\n  Top 10 individuals in final population:")
+        for rank, (fit, cyc, perm) in enumerate(stats["top10"], start=1):
+            print(f"    {rank:2d}) fitness={fit:.6f}, cycle={cyc}")
+            feasible, stations, loads = decode_with_cycle_limit(
+                perm, times, preds, succs, M_STATIONS, int(cyc)
+            )
+            for s_idx, tasks in enumerate(stations, start=1):
+                print(f"        Station {s_idx}: {tasks}")
+
+        if best_cycle < best_overall_cycle:
+            best_overall_cycle = best_cycle
+            best_overall_solution = (best_perm, best_stations, best_loads)
+            best_overall_top10 = stats["top10"]
+
+    mean_cycle_runs = sum(run_best_cycles) / len(run_best_cycles)
+    worst_cycle_runs = max(run_best_cycles)
+
+    best_gap_abs = best_overall_cycle - OPTIMAL_CYCLE
+    best_gap_pct = 100.0 * best_gap_abs / OPTIMAL_CYCLE
+
+    mean_gap_abs = mean_cycle_runs - OPTIMAL_CYCLE
+    mean_gap_pct = 100.0 * mean_gap_abs / OPTIMAL_CYCLE
+
+    total_runtime = time.time() - start_time
+
+    print("\n====================================")
+    print("        10 RUN GLOBAL SUMMARY")
+    print("====================================")
+    print(f"GA parameters:")
+    print(f"  Population size   : {POP_SIZE}")
+    print(f"  Generations       : {GENERATIONS}")
+    print(f"  Crossover rate    : {CROSSOVER_RATE}")
+    print(f"  Mutation rate     : {MUTATION_RATE}")
+    print(f"  Parent selection  : Tournament (k=2)")
+    print(f"  Crossover method  : POX-benzeri precedence preserving")
+    print(f"  Mutation method   : Swap mutation")
+    print(f"  Iteration number  : {GENERATIONS} generations per run")
+    print(f"  Total runs        : {RUNS}")
+    print()
+
+    print(f"Run best cycle times: {run_best_cycles}")
+    print(f"Best  cycle over runs : {best_overall_cycle}")
+    print(f"Mean  cycle over runs : {mean_cycle_runs:.2f}")
+    print(f"Worst cycle over runs : {worst_cycle_runs}")
+    print()
+
+    print(f"Known optimal C*      : {OPTIMAL_CYCLE}")
+    print(f"Best-of-10 gap        : {best_gap_abs}  ({best_gap_pct:.3f} % above optimum)")
+    print(f"Mean-of-10 gap        : {mean_gap_abs:.2f}  ({mean_gap_pct:.3f} % above optimum)")
+    print()
+
+    best_perm, best_stations, best_loads = best_overall_solution
+    print("Best-of-10 solution station loads:")
+    for i, load in enumerate(best_loads, start=1):
+        print(f"  Station {i}: load = {load}")
+
+    print("\nBest-of-10 solution assignments:")
+    for i, tasks in enumerate(best_stations, start=1):
+        print(f"  Station {i}: {tasks}")
+
+    print("\nTop 10 individuals of best run (by fitness):")
+    for rank, (fit, cyc, perm) in enumerate(best_overall_top10, start=1):
+        print(f"  {rank:2d}) fitness={fit:.6f}, cycle={cyc}")
+        feasible, stations, loads = decode_with_cycle_limit(
+            perm, times, preds, succs, M_STATIONS, int(cyc)
+        )
+        for s_idx, tasks in enumerate(stations, start=1):
+            print(f"        Station {s_idx}: {tasks}")
+
+    print(f"\nTotal runtime for {RUNS} runs: {total_runtime:.2f} seconds")
+
+    instance_name = os.path.splitext(os.path.basename(INSTANCE_PATH))[0]
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M")
+
+    summary_file      = f"{instance_name}_summary_{timestamp}.csv"
+    runs_file         = f"{instance_name}_run_details_{timestamp}.csv"
+    best_details_file = f"{instance_name}_best_details_{timestamp}.csv"
+    top10_file        = f"{instance_name}-top-10-individuals-{timestamp}.csv"
+    convergence_file  = f"{instance_name}_convergence_{timestamp}.csv"
+
+    print("\nGenerated output filenames:")
+    print("  Summary file      :", summary_file)
+    print("  Run details file  :", runs_file)
+    print("  Best details file :", best_details_file)
+    print("  Top10 file        :", top10_file)
+    print()
+
+    with open(summary_file, "w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerow([
+            "Instance","Stations(m)","TotalWork(sum_ti)","Population","Generations",
+            "CrossoverRate","MutationRate","ParentSelection","CrossoverMethod",
+            "MutationMethod","Runs","BestCycle","MeanCycle","WorstCycle","OptimalC",
+            "BestGapAbs","BestGapPct","MeanGapAbs","MeanGapPct","TotalRuntime(sec)"
+        ])
+        writer.writerow([
+            instance_name, M_STATIONS, total_time, POP_SIZE, GENERATIONS,
+            CROSSOVER_RATE, MUTATION_RATE, "Tournament(k=2)", "POX", "Swap", RUNS,
+            best_overall_cycle, f"{mean_cycle_runs:.2f}", worst_cycle_runs, OPTIMAL_CYCLE,
+            best_gap_abs, f"{best_gap_pct:.3f}", f"{mean_gap_abs:.2f}", f"{mean_gap_pct:.3f}",
+            f"{total_runtime:.2f}"
+        ])
+
+    print(f"CSV summary saved to: {summary_file}\n")
+
+    with open(runs_file, "w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerow(["Run","BestCycle","RunRuntime(sec)"])
+        for r in range(len(run_best_cycles)):
+            writer.writerow([r + 1, run_best_cycles[r], f"{run_runtimes[r]:.2f}"])
+
+    print(f"Run details saved to: {runs_file}")
+
+    total_line_eff = 100.0 * total_time / (M_STATIONS * best_overall_cycle)
+
+    with open(best_details_file, "w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerow([
+            "Instance","Stations(m)","BestCycle","TotalWork(sum_ti)","GlobalLineEfficiency(%)",
+            "StationIndex","StationLoad","StationUtilization(Load/BestCycle)","TasksSequence"
+        ])
+        for s_idx, (load, tasks) in enumerate(zip(best_loads, best_stations), start=1):
+            utilization = load / best_overall_cycle
+            tasks_str = " ".join(str(t) for t in tasks)
+            writer.writerow([
+                instance_name, M_STATIONS, best_overall_cycle, total_time,
+                f"{total_line_eff:.2f}", s_idx, load, f"{utilization:.4f}", tasks_str
+            ])
+
+    print(f"Best solution details saved to: {best_details_file}")
+
+    with open(top10_file, "w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerow([
+            "Instance","Stations(m)","RankInBestRun","Fitness","Cycle","StationIndex",
+            "StationLoad","StationUtilization(Load/Cycle)","TasksSequence"
+        ])
+        for rank, (fit, cyc, perm) in enumerate(best_overall_top10, start=1):
+            feasible, stations, loads = decode_with_cycle_limit(
+                perm, times, preds, succs, M_STATIONS, int(cyc)
+            )
+            for s_idx, (load, tasks) in enumerate(zip(loads, stations), start=1):
+                tasks_str = " ".join(str(t) for t in tasks)
+                utilization = 0.0 if cyc == 0 else load / cyc
+                writer.writerow([
+                    instance_name, M_STATIONS, rank, f"{fit:.6f}", cyc,
+                    s_idx, load, f"{utilization:.4f}", tasks_str
+                ])
+
+    print(f"Top 10 individuals (best run) saved to: {top10_file}")
+
+    with open(convergence_file, "w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerow(["Run","Generation","BestSoFar","BestInGeneration","MeanCycle"])
+        writer.writerows(all_convergence_rows)
+
+    print(f"Convergence history saved to: {convergence_file}")
+
+
+if __name__ == "__main__":
+    main()
 \end{lstlisting}
 
 
+\clearpage
 
 
-% ---------- PART 1 ----------
+\section{Run-by-run Results for All Benchmark Instances}
+\label{app:run-by-run}
+
 \begin{table*}[t]
 \centering
 \caption{Run-by-run best cycle time and runtime results for all benchmark instances.}
 \label{tab:run_by_run_all}
 \footnotesize
 
-% ---------- BARTHOLD ----------
 \begin{subtable}{0.48\textwidth}
 \centering
 \caption{BARTHOLD}
@@ -1276,7 +2144,6 @@ Run & BestCycle & Runtime (s) \\
 \end{tabular}
 \end{subtable}
 \hfill
-% ---------- TONGE70 ----------
 \begin{subtable}{0.48\textwidth}
 \centering
 \caption{TONGE70}
@@ -1300,7 +2167,6 @@ Run & BestCycle & Runtime (s) \\
 
 \vspace{4mm}
 
-% ---------- SAWYER30 ----------
 \begin{subtable}{0.48\textwidth}
 \centering
 \caption{SAWYER30}
@@ -1322,7 +2188,6 @@ Run & BestCycle & Runtime (s) \\
 \end{tabular}
 \end{subtable}
 \hfill
-% ---------- LUTZ1 ----------
 \begin{subtable}{0.48\textwidth}
 \centering
 \caption{LUTZ1}
@@ -1346,14 +2211,12 @@ Run & BestCycle & Runtime (s) \\
 
 \end{table*}
 
-% ---------- PART 2 (continued) ----------
 \begin{table*}[t]
 \ContinuedFloat
 \centering
 \caption{Run-by-run best cycle time and runtime results for all benchmark instances (continued).}
 \footnotesize
 
-% ---------- ARC111 ----------
 \begin{subtable}{0.48\textwidth}
 \centering
 \caption{ARC111}
@@ -1375,7 +2238,6 @@ Run & BestCycle & Runtime (s) \\
 \end{tabular}
 \end{subtable}
 \hfill
-% ---------- LUTZ3 ----------
 \begin{subtable}{0.48\textwidth}
 \centering
 \caption{LUTZ3}
@@ -1399,7 +2261,6 @@ Run & BestCycle & Runtime (s) \\
 
 \vspace{4mm}
 
-% ---------- SCHOLL ----------
 \begin{subtable}{0.48\textwidth}
 \centering
 \caption{SCHOLL}
@@ -1421,7 +2282,6 @@ Run & BestCycle & Runtime (s) \\
 \end{tabular}
 \end{subtable}
 \hfill
-% ---------- ARC83 ----------
 \begin{subtable}{0.48\textwidth}
 \centering
 \caption{ARC83}
@@ -1445,14 +2305,12 @@ Run & BestCycle & Runtime (s) \\
 
 \end{table*}
 
-% ---------- PART 3 (continued) ----------
 \begin{table*}[t]
 \ContinuedFloat
 \centering
 \caption{Run-by-run best cycle time and runtime results for all benchmark instances (continued).}
 \footnotesize
 
-% ---------- BARTHOL2 ----------
 \begin{subtable}{0.48\textwidth}
 \centering
 \caption{BARTHOL2}
@@ -1474,7 +2332,6 @@ Run & BestCycle & Runtime (s) \\
 \end{tabular}
 \end{subtable}
 \hfill
-% ---------- GUNTHER ----------
 \begin{subtable}{0.48\textwidth}
 \centering
 \caption{GUNTHER}
@@ -1497,6 +2354,7 @@ Run & BestCycle & Runtime (s) \\
 \end{subtable}
 
 \end{table*}
+
 
 
 
@@ -1605,6 +2463,122 @@ table[
 \end{tikzpicture}
 \caption{CSV dosyasından çizilen grafik}
 \end{figure}
+
+
+\section{Additional Results for ARC83' top 10 Individuals}
+\label{app:arc83-topten}
+\UFlowRun{3}{0.000152}{
+1 2 4 5 8,
+3 6 9,
+7 11 10 14 25 12,
+19 24 29 13 18 17 22 21 27,
+28 32 35 33 34 23,
+36 38 37 40 30 31 15 20,
+26 39 43 44 46 42 41 45,
+47 49 69 71 70 72 73 48 50,
+51 52 53 54 55 56 57 58 59 60 61,
+62 63 64 65 66 67 68 74,
+75 76 16 78 77 79 81 80,
+82 83
+}
+\UFlowRun{4}{0.000152}{
+1 2 4 5 8,
+3 6 9,
+7 11 10 14 25 12,
+19 24 29 13 18 17 22 21 27,
+28 32 35 33 34 23,
+36 38 37 40 30 31 15 20,
+26 39 43 44 46 42 41 45,
+47 49 69 71 70 72 73 48 50,
+51 52 53 54 55 56 57 58 59 60 61,
+62 63 64 65 66 67 68 74,
+75 76 16 78 77 79 81 80,
+82 83
+}
+\UFlowRun{5}{0.000151}{
+1 2 4 7 11,
+15 3 6 10,
+5 8 13 17 18 22 20 21,
+9 14 19 24 29 27 23,
+28 25 32 34 33 37 40,
+36 38 41 35 30 31 45,
+39 44 46 48 50 51 52 43 26,
+47 49 69 70 71 72 53 54 55 56,
+57 58 59 60 61 62 73 63 64 65,
+66 67 68 75 74 76 12 16,
+42 77 78 79 80 81,
+82 83
+}
+\UFlowRun{6}{0.000151}{
+1 2 4 5 8,
+3 6 10 13,
+9 12 7 11 15 25,
+14 19 24 29 30 31 18 23,
+20 17 22 21 27 26 28 32,
+33 34 36 35 38 41 45,
+47 37 40 49 69 71 39 42 16,
+43 44 46 48 50 51 52 53 54 55 56,
+70 72 73 57 58 59 60 61,
+62 63 64 65 66 67 68 74,
+75 76 77 78 79 80 81,
+82 83
+}
+\UFlowRun{7}{0.000151}{
+1 2 4 5 8,
+3 6 10 13,
+14 9 12 25 7,
+11 15 20 18 23 19 24 29 30 16,
+31 17 28 21 22 32 35,
+36 39 43 34 38 41,
+33 37 40 27 26 44 46 48 50 51,
+42 52 45 47 49 69 70 71 53 54,
+72 73 55 56 57 58 59 60 61,
+62 63 64 65 66 67 68 74,
+75 76 77 78 79 81 80,
+82 83
+}
+\UFlowRun{8}{0.000151}{
+1 2 4 5 8,
+3 6 10 13,
+14 9 12 25 7,
+11 15 20 18 23 19 24 29 30 16,
+31 17 28 21 22 32 35,
+36 39 43 34 38 41,
+33 37 40 27 26 44 46 48 50 51,
+42 52 45 47 49 69 70 71 53 54,
+72 73 55 56 57 58 59 60 61,
+62 63 64 65 66 67 68 74,
+75 76 77 78 79 81 80,
+82 83
+}
+\UFlowRun{9}{0.000151}{
+1 2 3 5,
+4 6 10 8 13,
+9 7 11 15 14,
+19 25 24 18 23 17 22 29 21,
+27 28 32 35 33 36 20,
+38 41 45 47 49 69 71 34 37,
+40 30 31 39 43 44 46 26,
+70 72 73 48 50 51 52 53 12,
+54 55 56 57 58 59 60 61 62 63 64,
+65 66 67 68 74 75 76 16,
+42 77 78 79 81 80,
+82 83
+}
+\UFlowRun{10}{0.000151}{
+1 2 3 5,
+4 6 10 8 13,
+9 7 11 15 14,
+19 25 24 18 23 17 22 29 21,
+27 28 32 35 33 36 20,
+38 41 45 47 49 69 71 34 37,
+40 30 31 39 43 44 46 26,
+70 72 73 48 50 51 52 53 12,
+54 55 56 57 58 59 60 61 62 63 64,
+65 66 67 68 74 75 76 16,
+42 77 78 79 81 80,
+82 83
+}
 
 
 \end{document}
