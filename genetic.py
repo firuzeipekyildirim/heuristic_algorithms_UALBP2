@@ -9,20 +9,8 @@ from datetime import datetime
 # =====================================================
 # KULLANICI AYARLARI
 # =====================================================
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-INSTANCE_PATH     = "LUTZ3.IN2"   # IN2 dosyanın yolu
-=======
-INSTANCE_PATH     = "TONGE70.IN2"   # IN2 dosyanın yolu
->>>>>>> 23f032477ef5d6c820aa9b637a8c90419b0d03a6
-=======
-INSTANCE_PATH     = "SAWYER30.IN2"   # IN2 dosyanın yolu
-=======
 
 INSTANCE_PATH     = "ARC83.IN2"   # IN2 dosyanın yolu
->>>>>>> 6636f81e382dbb480a8b0e2f4a8033ca969a2411
-
 M_STATIONS        = 12          # istasyon sayısı
 POP_SIZE          = 100
 GENERATIONS       = 250         #gorsellestirme-convergence
