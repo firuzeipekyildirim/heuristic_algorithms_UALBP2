@@ -5,7 +5,6 @@
 % =========================
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage[english]{babel}
 \usepackage{subcaption}
 \usepackage{booktabs}
 \usepackage{float}
@@ -34,7 +33,10 @@
 \usepackage{caption}
 
 \usepackage{tikz}
-\usetikzlibrary{arrows.meta, positioning}
+\usetikzlibrary{shapes.geometric, arrows, positioning}
+\usetikzlibrary{arrows.meta}
+\tikzset{>=Latex}
+
 \usepackage[table]{xcolor}
 \usepackage{pgfplots}
 %\pgfplotsset{compat=1.18}
@@ -143,7 +145,7 @@
     align=center,
     fill=stationfill
   },
-  flow/.style={-Latex, line width=0.6pt}
+  flow/.style={-latex, line width=0.6pt}
 }
 
 \newcommand{\UFlowRun}[3]{%
@@ -152,16 +154,18 @@
 \begin{tikzpicture}[font=\small]
 
 \foreach[count=\stidx from 1] \seq in {#3}{
+  \ifnum\stidx>12\relax\breakforeach\fi
+
   \ifnum\stidx<7
     \pgfmathsetmacro{\x}{0}
-    \pgfmathsetmacro{\y}{-(\stidx-1)*1.25}
+    \pgfmathsetmacro{\y}{-(\stidx-1)*2.0}
   \else
     \pgfmathsetmacro{\x}{6.2}
-    \pgfmathsetmacro{\y}{-(12-\stidx)*1.25}
+    \pgfmathsetmacro{\y}{-(12-\stidx)*2.0}
   \fi
 
   \node[station] (R#1S\stidx) at (\x,\y) {%
-    \textbf{Individual #1 -- S\stidx}\\[-1pt]
+    \textbf{Station \stidx}\\[-1pt]
     \scriptsize \seq
   };
 }
@@ -174,6 +178,46 @@
 \end{tikzpicture}
 \caption{U-shaped 12-station assignment for ARC83 (Individual #1, Fitness = #2).}
 \label{fig:arc83-ind#1}
+\end{figure}
+}
+
+
+% \tikzset{
+%   station/.style={
+%     draw, rounded corners, align=left,
+%     inner sep=6pt, text width=5.6cm
+%   },
+%   flow/.style={-Latex, thick}
+% }
+
+\newcommand{\UFlowBestRun}[4]{%
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[font=\small]
+
+\foreach[count=\stidx from 1] \seq in {#4}{
+  \ifnum\stidx<7
+    \pgfmathsetmacro{\x}{0}
+    \pgfmathsetmacro{\y}{-(\stidx-1)*2.0}
+  \else
+    \pgfmathsetmacro{\x}{6.2}
+    \pgfmathsetmacro{\y}{-(12-\stidx)*2.0}
+  \fi
+
+  \node[station] (R#1S\stidx) at (\x,\y) {%
+    \textbf{#3 -- S\stidx}\\[-1pt]
+    \scriptsize \seq
+  };
+}
+
+\foreach \i in {1,...,11}{
+  \pgfmathtruncatemacro{\j}{\i+1}
+  \draw[flow] (R#1S\i) -- (R#1S\j);
+}
+
+\end{tikzpicture}
+\caption{U-shaped 12-station assignment for #3 (BestCycle = #2).}
+\label{fig:#3-bestcycle-#1}
 \end{figure}
 }
 
@@ -450,6 +494,8 @@ The file structure is organized as follows: the initial lines represent the dura
 \begin{algorithm}[H]
 \caption{Genetic Algorithm for UALBP-II}
 \label{alg:ga_ualbp2}
+
+\begin{multicols}{2}
 \begin{algorithmic}[1]
 \Require Tasks $T$, task times $t$, precedence graph $P$, number of stations $m$, population size $N_{\text{pop}}$, generations $N_{\text{gen}}$, crossover rate $P_c$, mutation rate $P_m$
 \Ensure Best cycle time $C_{\min}$ and best assignment/permutation $BestSol$
@@ -532,6 +578,8 @@ The file structure is organized as follows: the initial lines represent the dura
 \State \Return $(BestSol, C_{\min})$
 \Statex \textbf{END}
 \end{algorithmic}
+\end{multicols}
+
 \end{algorithm}
 
 
@@ -747,7 +795,14 @@ In this part, the paper showcases the outcomes derived from the Genetic Algorith
 \par
 \subsection{Parameter Tuning}
 
-The reason we focused particularly on the crossover and mutation parameters in the fine-tuning study is that these two operators directly control the diversification and intensification mechanisms of the GA. Since permutation-based and precedence-constrained problems such as UALBP-2 tend to trigger very rapid convergence of the population, it is widely accepted in the literature that the two parameters with the strongest impact on GA performance are the crossover rate (CR) and the mutation rate (MR)\cite{potts_vandevelde_1995}. Therefore, a full-factorial grid search was conducted by testing eight mutation rate levels (0.005, 0.01, 0.02, 0.04, 0.06, 0.08, 0.12, 0.20) and eight crossover rate levels (0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.90, 0.98), resulting in 64 parameter combinations. Each configuration was evaluated using the best cycle time obtained over 5 independent runs (best\_cycle\_over\_5\_runs), enabling a systematic comparison of the exploration–exploitation balance across low-to-high MR and CR regimes.
+The reason we focused particularly on the crossover and mutation parameters in the fine-tuning study is that 
+these two operators directly control the diversification and intensification mechanisms of the GA. Since permutation-based and precedence-constrained problems such as UALBP-2 tend to trigger very rapid convergence of the population, it is widely accepted in the literature that the two parameters with the strongest impact on GA performance are the crossover rate (CR) and the mutation rate
+(MR)\cite{potts_vandevelde_1995}. Therefore, a full-factorial grid search was conducted by testing eight mutation 
+rate levels (0.005, 0.01, 0.02, 0.04, 0.06, 0.08, 0.12, 0.20) and eight crossover rate levels 
+(0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.90, 0.98), resulting in 64 parameter combinations. 
+Each configuration was evaluated using the best cycle time obtained over 5 independent runs 
+(best\_cycle\_over\_5\_runs), enabling a systematic comparison of the exploration–exploitation 
+balance across low-to-high MR and CR regimes.
 
 \begin{figure}[H]
 \centering
@@ -901,8 +956,8 @@ table[
     col sep=comma,
     x=Generation,
     y=BestSoFar,
-    restrict expr to domain={\coordindex}{1500:1799}
-] {data.csv};
+    restrict expr to domain={\coordindex}{1500:1749}
+] {arc83convergencecopy.csv};
 
 \legend{Best Cycle Time So Far}
 \end{axis}
@@ -916,178 +971,130 @@ As seen in \cref{fig:csv-graph_arc83} and \cref{fig:arc83-conv-1,fig:arc83-conv-
 
 
 
-\begin{figure}[h!]
+\begin{figure}[H]
 \centering
 
+% ---------- Row 1 ----------
 \begin{subfigure}[t]{0.32\textwidth}
 \centering
 \begin{tikzpicture}
-\begin{axis}[
-    width=\textwidth, height=5cm,
-    grid=both,
-    xlabel={}, ylabel={},
-]
+\begin{axis}[width=\textwidth,height=5cm,grid=both]
 \addplot[color=blue, mark=.] table[
     col sep=comma, x=Generation, y=BestSoFar,
-    restrict expr to domain={\coordindex}{0:299}
-] {data.csv};
+    restrict expr to domain={\coordindex}{250:499}
+]{arc83convergencecopy.csv};
 \end{axis}
 \end{tikzpicture}
-\caption{0--299}\label{fig:arc83-1}
+\caption{300--599}
 \end{subfigure}\hfill
 \begin{subfigure}[t]{0.32\textwidth}
 \centering
 \begin{tikzpicture}
-\begin{axis}[
-    width=\textwidth, height=5cm,
-    grid=both,
-    xlabel={}, ylabel={},
-]
+\begin{axis}[width=\textwidth,height=5cm,grid=both]
 \addplot[color=blue, mark=.] table[
     col sep=comma, x=Generation, y=BestSoFar,
-    restrict expr to domain={\coordindex}{300:599}
-] {data.csv};
+    restrict expr to domain={\coordindex}{500:749}
+]{arc83convergencecopy.csv};
 \end{axis}
 \end{tikzpicture}
-\caption{300--599}\label{fig:arc83-2}
+\caption{600--899}
 \end{subfigure}\hfill
 \begin{subfigure}[t]{0.32\textwidth}
 \centering
 \begin{tikzpicture}
-\begin{axis}[
-    width=\textwidth, height=5cm,
-    grid=both,
-    xlabel={}, ylabel={},
-]
+\begin{axis}[width=\textwidth,height=5cm,grid=both]
 \addplot[color=blue, mark=.] table[
     col sep=comma, x=Generation, y=BestSoFar,
-    restrict expr to domain={\coordindex}{600:899}
-] {data.csv};
+    restrict expr to domain={\coordindex}{750:999}
+]{arc83convergencecopy.csv};
 \end{axis}
 \end{tikzpicture}
-\caption{600--899}\label{fig:arc83-3}
+\caption{900--1199}
 \end{subfigure}
 
-\caption{Convergence graphs for ARC83 (Best cycle time so far) - Part 1}
-\label{fig:arc83-conv-1}
-\end{figure}
+\vspace{0.4cm}
 
-\begin{figure}[h!]
-\centering
-
+% ---------- Row 2 ----------
 \begin{subfigure}[t]{0.32\textwidth}
 \centering
 \begin{tikzpicture}
-\begin{axis}[
-    width=\textwidth, height=5cm,
-    grid=both,
-    xlabel={}, ylabel={},
-]
+\begin{axis}[width=\textwidth,height=5cm,grid=both]
 \addplot[color=blue, mark=.] table[
     col sep=comma, x=Generation, y=BestSoFar,
-    restrict expr to domain={\coordindex}{900:1199}
-] {data.csv};
+    restrict expr to domain={\coordindex}{1000:1249}
+]{arc83convergencecopy.csv};
 \end{axis}
 \end{tikzpicture}
-\caption{900--1199}\label{fig:arc83-4}
+\caption{1200--1499}
 \end{subfigure}\hfill
 \begin{subfigure}[t]{0.32\textwidth}
 \centering
 \begin{tikzpicture}
-\begin{axis}[
-    width=\textwidth, height=5cm,
-    grid=both,
-    xlabel={}, ylabel={},
-]
+\begin{axis}[width=\textwidth,height=5cm,grid=both]
 \addplot[color=blue, mark=.] table[
     col sep=comma, x=Generation, y=BestSoFar,
-    restrict expr to domain={\coordindex}{1200:1499}
-] {data.csv};
+    restrict expr to domain={\coordindex}{1250:1499}
+]{arc83convergencecopy.csv};
 \end{axis}
 \end{tikzpicture}
-\caption{1200--1499}\label{fig:arc83-5}
+\caption{1500--1799}
 \end{subfigure}\hfill
 \begin{subfigure}[t]{0.32\textwidth}
 \centering
 \begin{tikzpicture}
-\begin{axis}[
-    width=\textwidth, height=5cm,
-    grid=both,
-    xlabel={}, ylabel={},
-]
+\begin{axis}[width=\textwidth,height=5cm,grid=both]
 \addplot[color=blue, mark=.] table[
     col sep=comma, x=Generation, y=BestSoFar,
-    restrict expr to domain={\coordindex}{2700:2999}
-] {data.csv};
+    restrict expr to domain={\coordindex}{1500:1749}
+]{arc83convergencecopy.csv};
 \end{axis}
 \end{tikzpicture}
-\caption{2700--2999}\label{fig:arc83-10}
+\caption{1800--2099}
 \end{subfigure}
 
+\vspace{0.4cm}
 
-
-\caption{Convergence graphs for ARC83 (Best cycle time so far) - Part 2}
-\label{fig:arc83-conv-2}
-\end{figure}
-
-
-\begin{figure}[h!]
-\centering
-
+% ---------- Row 3 ----------
 \begin{subfigure}[t]{0.32\textwidth}
 \centering
 \begin{tikzpicture}
-\begin{axis}[
-    width=\textwidth, height=5cm,
-    grid=both,
-    xlabel={}, ylabel={},
-]
+\begin{axis}[width=\textwidth,height=5cm,grid=both]
 \addplot[color=blue, mark=.] table[
     col sep=comma, x=Generation, y=BestSoFar,
-    restrict expr to domain={\coordindex}{1800:2099}
-] {data.csv};
+    restrict expr to domain={\coordindex}{1750:1999}
+]{arc83convergencecopy.csv};
 \end{axis}
 \end{tikzpicture}
-\caption{1800--2099}\label{fig:arc83-7}
+\caption{2100--2399}
 \end{subfigure}\hfill
 \begin{subfigure}[t]{0.32\textwidth}
 \centering
 \begin{tikzpicture}
-\begin{axis}[
-    width=\textwidth, height=5cm,
-    grid=both,
-    xlabel={}, ylabel={},
-]
+\begin{axis}[width=\textwidth,height=5cm,grid=both]
 \addplot[color=blue, mark=.] table[
     col sep=comma, x=Generation, y=BestSoFar,
-    restrict expr to domain={\coordindex}{2100:2399}
-] {data.csv};
+    restrict expr to domain={\coordindex}{2000:2249}
+]{arc83convergencecopy.csv};
 \end{axis}
 \end{tikzpicture}
-\caption{2100--2399}\label{fig:arc83-8}
+\caption{2400--2699}
 \end{subfigure}\hfill
 \begin{subfigure}[t]{0.32\textwidth}
 \centering
 \begin{tikzpicture}
-\begin{axis}[
-    width=\textwidth, height=5cm,
-    grid=both,
-    xlabel={}, ylabel={},
-]
+\begin{axis}[width=\textwidth,height=5cm,grid=both]
 \addplot[color=blue, mark=.] table[
     col sep=comma, x=Generation, y=BestSoFar,
-    restrict expr to domain={\coordindex}{2400:2699}
-] {data.csv};
+    restrict expr to domain={\coordindex}{2250:2499}
+]{arc83convergencecopy.csv};
 \end{axis}
 \end{tikzpicture}
-\caption{2400--2699}\label{fig:arc83-9}
+\caption{2700--2999}
 \end{subfigure}
 
-\caption{Convergence graphs for ARC83 (Best cycle time so far) - Part 3}
-\label{fig:arc83-conv-3}
+\caption{Convergence graphs for ARC83 (Best cycle time so far)}
+\label{fig:arc83-convergence}
 \end{figure}
-
-
 
 
 \par
@@ -1234,32 +1241,32 @@ Here, Individuals 1 and 2 correspond to two of the top 10 individuals for the AR
 The remaining individuals/solutions (Individuals 3--10) are reported in Appendix~\cref{app:arc83-topten}.
 
 \UFlowRun{1}{0.000155}{
-1 2 4 5 8,
-3 6 10 13,
-9 7 14 25 12,
-19 24 17 22 18 23 29 21 11,
-27 28 32 36 34 33,
-38 35 37 40 30 31 15 20,
-39 43 44 46 26 41 45 47 49,
-69 70 72 71 73 48 50 51 52,
-53 54 55 56 57 58 59 60 61 62 63,
-64 65 66 67 68 75 74,
-76 16 42 77 78 79 80,
-82 81 83
+1 2 5 3,
+4 6 10 25 13,
+17 14 19 7 24 29,
+11 15 18 23 22 21 27 30 31,
+28 32 33 34 9 20,
+12 36 16 39 42 8 44,
+46 48 38 41 45 47 49 50 51 52,
+53 43 26 69 70 72 71 73,
+54 55 56 57 58 59 60 61 62 63 64,
+37 65 66 67 68 75 74,
+76 35 40 77 78 79 80,
+81 82 83
 }
-\UFlowRun{2}{0.000153}{
-1 2 4 5 8,
-3 6 9,
-12 7 11 10 14 19,
-25 24 13 18 23 17 22 21 27,
-28 29 15 20 32 36 38,
-41 34 35 33 37 40 30 45,
-31 39 44 46 48 43 26 47,
-49 69 71 70 72 73 50 51 52,
-53 54 55 56 57 58 59 60 61 62 63,
-64 65 66 67 68 74 75,
-76 16 42 77 78 79 80,
-82 81 83
+\UFlowRun{2}{0.000155}{
+1 2 5 3,
+4 6 10 25 13,
+17 14 19 7 24 29,
+11 15 18 23 22 21 27 30 31,
+28 32 33 34 9 20,
+12 36 16 39 42 8 44,
+46 48 38 41 45 47 49 50 51 52,
+53 43 26 69 70 72 71 73,
+54 55 56 57 58 59 60 61 62 63 64,
+37 65 66 67 68 75 74,
+76 35 40 77 78 79 80,
+81 82 83
 }
 
 
@@ -1316,12 +1323,30 @@ position of late tasks (81 - 83). The overall line efficiency of $97.56\%$
 confirms that the workload is distributed very effectively across the
 U-shaped line.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{arc38.jpg}
-    \caption{U-shaped assembly line layout for ARC83.IN2 obtained by the GA.}
-    \label{fig:arc83_u_layout}
-\end{figure}
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=\textwidth]{arc38.jpg}
+%     \caption{U-shaped assembly line layout for ARC83.IN2 obtained by the GA.}
+%     \label{fig:arc83_u_layout}
+% \end{figure}
+% Preamble (ekli değilse ekle):
+% \usetikzlibrary{positioning,arrows.meta}
+
+\UFlowBestRun{1}{6431}{ARC83}{
+  {1 2 5 3},
+  {4 6 10 25 13},
+  {17 14 19 7 24 29},
+  {11 15 18 23 22 21 27 30 31},
+  {28 32 33 34 9 20},
+  {12 36 16 39 42 8 44},
+  {46 48 38 41 45 47 49 50 51 52},
+  {53 43 26 69 70 72 71 73},
+  {54 55 56 57 58 59 60 61 62 63 64},
+  {37 65 66 67 68 75 74},
+  {76 35 40 77 78 79 80},
+  {81 82 83}
+}
+
 
 Figure~\ref{fig:arc83_u_layout} illustrates the U-shaped layout of the best GA
 solution for ARC83, showing station loads, utilisation levels and the
@@ -2455,8 +2480,8 @@ table[
     col sep=comma,
     x=Generation,
     y=BestSoFar,
-    restrict expr to domain={\coordindex}{0:299}
-] {data.csv};
+    restrict expr to domain={\coordindex}{0:249}
+] {arc83convergencecopy.csv};
 
 \legend{Veri}
 \end{axis}
@@ -2467,118 +2492,119 @@ table[
 
 \section{Additional Results for ARC83' top 10 Individuals}
 \label{app:arc83-topten}
-\UFlowRun{3}{0.000152}{
-1 2 4 5 8,
-3 6 9,
-7 11 10 14 25 12,
-19 24 29 13 18 17 22 21 27,
-28 32 35 33 34 23,
-36 38 37 40 30 31 15 20,
-26 39 43 44 46 42 41 45,
-47 49 69 71 70 72 73 48 50,
-51 52 53 54 55 56 57 58 59 60 61,
-62 63 64 65 66 67 68 74,
-75 76 16 78 77 79 81 80,
-82 83
-}
-\UFlowRun{4}{0.000152}{
-1 2 4 5 8,
-3 6 9,
-7 11 10 14 25 12,
-19 24 29 13 18 17 22 21 27,
-28 32 35 33 34 23,
-36 38 37 40 30 31 15 20,
-26 39 43 44 46 42 41 45,
-47 49 69 71 70 72 73 48 50,
-51 52 53 54 55 56 57 58 59 60 61,
-62 63 64 65 66 67 68 74,
-75 76 16 78 77 79 81 80,
-82 83
-}
-\UFlowRun{5}{0.000151}{
-1 2 4 7 11,
-15 3 6 10,
-5 8 13 17 18 22 20 21,
-9 14 19 24 29 27 23,
-28 25 32 34 33 37 40,
-36 38 41 35 30 31 45,
-39 44 46 48 50 51 52 43 26,
-47 49 69 70 71 72 53 54 55 56,
-57 58 59 60 61 62 73 63 64 65,
-66 67 68 75 74 76 12 16,
-42 77 78 79 80 81,
-82 83
-}
-\UFlowRun{6}{0.000151}{
-1 2 4 5 8,
-3 6 10 13,
-9 12 7 11 15 25,
-14 19 24 29 30 31 18 23,
-20 17 22 21 27 26 28 32,
-33 34 36 35 38 41 45,
-47 37 40 49 69 71 39 42 16,
-43 44 46 48 50 51 52 53 54 55 56,
-70 72 73 57 58 59 60 61,
-62 63 64 65 66 67 68 74,
-75 76 77 78 79 80 81,
-82 83
-}
-\UFlowRun{7}{0.000151}{
-1 2 4 5 8,
-3 6 10 13,
-14 9 12 25 7,
-11 15 20 18 23 19 24 29 30 16,
-31 17 28 21 22 32 35,
-36 39 43 34 38 41,
-33 37 40 27 26 44 46 48 50 51,
-42 52 45 47 49 69 70 71 53 54,
-72 73 55 56 57 58 59 60 61,
-62 63 64 65 66 67 68 74,
-75 76 77 78 79 81 80,
-82 83
-}
-\UFlowRun{8}{0.000151}{
-1 2 4 5 8,
-3 6 10 13,
-14 9 12 25 7,
-11 15 20 18 23 19 24 29 30 16,
-31 17 28 21 22 32 35,
-36 39 43 34 38 41,
-33 37 40 27 26 44 46 48 50 51,
-42 52 45 47 49 69 70 71 53 54,
-72 73 55 56 57 58 59 60 61,
-62 63 64 65 66 67 68 74,
-75 76 77 78 79 81 80,
-82 83
-}
-\UFlowRun{9}{0.000151}{
-1 2 3 5,
-4 6 10 8 13,
-9 7 11 15 14,
-19 25 24 18 23 17 22 29 21,
-27 28 32 35 33 36 20,
-38 41 45 47 49 69 71 34 37,
-40 30 31 39 43 44 46 26,
-70 72 73 48 50 51 52 53 12,
+\UFlowRun{3}{0.000155}{
+1 2 5 3,
+4 6 10 25 13,
+17 14 19 7 24 29,
+11 15 18 23 22 21 27 30 31,
+28 32 33 34 9 20,
+12 36 16 39 42 8 44,
+46 48 38 41 45 47 49 50 51 52,
+53 43 26 69 70 72 71 73,
 54 55 56 57 58 59 60 61 62 63 64,
-65 66 67 68 74 75 76 16,
-42 77 78 79 81 80,
-82 83
+37 65 66 67 68 75 74,
+76 35 40 77 78 79 80,
+81 82 83
 }
-\UFlowRun{10}{0.000151}{
-1 2 3 5,
-4 6 10 8 13,
-9 7 11 15 14,
-19 25 24 18 23 17 22 29 21,
-27 28 32 35 33 36 20,
-38 41 45 47 49 69 71 34 37,
-40 30 31 39 43 44 46 26,
-70 72 73 48 50 51 52 53 12,
+\UFlowRun{4}{0.000155}{
+1 2 5 3,
+4 6 10 25 13,
+17 14 19 7 24 29,
+11 15 18 23 22 21 27 30 31,
+28 32 33 34 9 20,
+12 36 16 39 42 8 44,
+46 48 38 41 45 47 49 50 51 52,
+53 43 26 69 70 72 71 73,
 54 55 56 57 58 59 60 61 62 63 64,
-65 66 67 68 74 75 76 16,
-42 77 78 79 81 80,
-82 83
+37 65 66 67 68 75 74,
+76 35 40 77 78 79 80,
+81 82 83
 }
+\UFlowRun{5}{0.000155}{
+1 2 5 3,
+4 6 10 25 13,
+17 14 19 7 24 29,
+11 15 18 23 22 21 27 30 31,
+28 32 33 34 9 20,
+12 36 16 39 42 8 44,
+46 48 38 41 45 47 49 50 51 52,
+53 43 26 69 70 72 71 73,
+54 55 56 57 58 59 60 61 62 63 64,
+37 65 66 67 68 75 74,
+76 35 40 77 78 79 80,
+81 82 83
+}
+\UFlowRun{6}{0.000155}{
+1 2 5 3,
+4 6 10 25 13,
+17 14 19 7 24 29,
+11 15 18 23 22 21 27 30 31,
+28 32 33 34 9 20,
+12 36 16 39 42 8 44,
+46 48 38 41 45 47 49 50 51 52,
+53 43 26 69 70 72 71 73,
+54 55 56 57 58 59 60 61 62 63 64,
+37 65 66 67 68 75 74,
+76 35 40 77 78 79 80,
+81 82 83
+}
+\UFlowRun{7}{0.000155}{
+1 2 5 3,
+4 6 10 25 13,
+17 14 19 7 24 29,
+11 15 18 23 22 21 27 30 31,
+28 32 33 34 9 20,
+12 36 38 16 41 39 45 44,
+47 8 49 42 46 48 50 51 52,
+53 43 26 69 70 72 71 73,
+54 55 56 57 58 59 60 61 62 63 64,
+37 65 66 67 68 75 74,
+76 35 40 77 78 79 80,
+81 82 83
+}
+\UFlowRun{8}{0.000155}{
+1 2 5 3,
+4 6 10 25 13,
+17 14 19 22 24 29 18 23,
+7 11 15 21 27 9,
+28 32 33 34 12 36 20,
+38 16 41 30 31 39 45 44,
+47 8 49 46 48 42 50 51 52,
+53 43 26 69 70 72 71 73,
+54 55 56 57 58 59 60 61 62 63 64,
+37 65 66 67 68 75 74,
+76 35 40 77 78 79 80,
+81 82 83
+}
+\UFlowRun{9}{0.000155}{
+1 2 5 3,
+4 6 10 25 13,
+17 14 19 22 24 29 18 23,
+7 11 15 21 27 9,
+28 32 33 34 12 36 20,
+38 16 41 30 31 39 45 44,
+47 8 49 46 48 42 50 51 52,
+53 43 26 69 70 72 71 73,
+54 55 56 57 58 59 60 61 62 63 64,
+37 65 66 67 68 75 74,
+76 35 40 77 78 79 80,
+81 82 83
+}
+\UFlowRun{10}{0.000154}{
+1 2 5 3,
+4 6 10 25 13,
+17 14 19 7 24 29,
+11 15 18 23 21 28 32 33 20,
+34 9 12 36 38 16,
+30 31 41 39 45 47 8 49,
+44 46 48 50 51 42 52 53 54 55,
+43 26 22 27 69 70 72 71,
+73 56 57 58 59 60 61 62 63 64,
+37 65 66 67 68 75 74,
+76 35 40 77 78 79 80,
+81 82 83
+}
+
 
 
 \end{document}

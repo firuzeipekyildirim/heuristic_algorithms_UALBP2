@@ -9,16 +9,16 @@ from datetime import datetime
 # =====================================================
 # KULLANICI AYARLARI
 # =====================================================
-INSTANCE_PATH     = "ARC83.IN2"   # IN2 dosyanın yolu
+INSTANCE_PATH     = "LUTZ3.IN2"   # IN2 dosyanın yolu
 M_STATIONS        = 12          # istasyon sayısı
 POP_SIZE          = 100
-GENERATIONS       = 250 #gorsellestirme
+GENERATIONS       = 250         #gorsellestirme-convergence
 CROSSOVER_RATE    = 0.2
 MUTATION_RATE     = 0.5
 RUNS              = 10         # GA kaç kez çalışacak
 BASE_SEED         = 42
 
-OPTIMAL_CYCLE     = 6412       # Excel'den bildiğimiz optimum AMA SALBP İÇİN
+OPTIMAL_CYCLE     = 138     # Excel'den bildiğimiz optimum AMA SALBP İÇİN
 
 # =====================================================
 # POX DEBUG AYARLARI
