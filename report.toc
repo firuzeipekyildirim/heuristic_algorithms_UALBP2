@@ -16,26 +16,26 @@
 \contentsline {subsection}{\numberline {3.1}The Algorithm}{8}{subsection.3.1}%
 \contentsline {subsection}{\numberline {3.2}Implementation}{10}{subsection.3.2}%
 \contentsline {subsubsection}{\numberline {3.2.1}Constructive Heuristic}{10}{subsubsection.3.2.1}%
-\contentsline {subsubsection}{\numberline {3.2.2}Chromosome Representation}{10}{subsubsection.3.2.2}%
+\contentsline {subsubsection}{\numberline {3.2.2}Chromosome Representation}{11}{subsubsection.3.2.2}%
 \contentsline {subsubsection}{\numberline {3.2.3}U-Shaped Decoding}{11}{subsubsection.3.2.3}%
-\contentsline {subsubsection}{\numberline {3.2.4}Fitness Function}{11}{subsubsection.3.2.4}%
+\contentsline {subsubsection}{\numberline {3.2.4}Fitness Function}{12}{subsubsection.3.2.4}%
 \contentsline {subsubsection}{\numberline {3.2.5}Parent Selection: Tournament Selection ($k = 2$)}{12}{subsubsection.3.2.5}%
-\contentsline {subsubsection}{\numberline {3.2.6}Crossover Operator: Precedence-Preserving Order Crossover (POX-like)}{12}{subsubsection.3.2.6}%
-\contentsline {subsubsection}{\numberline {3.2.7}Mutation Operator: Swap Mutation}{13}{subsubsection.3.2.7}%
-\contentsline {subsubsection}{\numberline {3.2.8}Repair Mechanism}{14}{subsubsection.3.2.8}%
-\contentsline {subsubsection}{\numberline {3.2.9}Termination Criteria}{14}{subsubsection.3.2.9}%
-\contentsline {section}{\numberline {4}Results}{15}{section.4}%
-\contentsline {subsection}{\numberline {4.1}Parameter Tuning}{15}{subsection.4.1}%
-\contentsline {subsection}{\numberline {4.2}GA Parameter Settings}{18}{subsection.4.2}%
-\contentsline {subsection}{\numberline {4.3}Run-by-Run Analysis}{19}{subsection.4.3}%
-\contentsline {subsection}{\numberline {4.4}Final Population and Top-10 Individuals}{20}{subsection.4.4}%
-\contentsline {subsection}{\numberline {4.5}Best Solution Analysis}{22}{subsection.4.5}%
-\contentsline {subsubsection}{\numberline {4.5.1}Cycle Time and Line Efficiency}{22}{subsubsection.4.5.1}%
-\contentsline {subsubsection}{\numberline {4.5.2}Station Load Distribution}{22}{subsubsection.4.5.2}%
-\contentsline {subsubsection}{\numberline {4.5.3}Task Sequence Characteristics}{23}{subsubsection.4.5.3}%
-\contentsline {subsection}{\numberline {4.6}Interpretation of Overall Results}{24}{subsection.4.6}%
-\contentsline {section}{\numberline {5}Contribution to Sustainable Development Goals}{26}{section.5}%
-\contentsline {section}{\numberline {6}Conclusions}{27}{section.6}%
-\contentsline {section}{\numberline {A}Genetic Algorithm Code for ARC83 (UALBP-II)}{29}{appendix.A}%
-\contentsline {section}{\numberline {B}Run-by-run Results for All Benchmark Instances}{48}{appendix.B}%
-\contentsline {section}{\numberline {C}Additional Results for ARC83' top 10 Individuals}{49}{appendix.C}%
+\contentsline {subsubsection}{\numberline {3.2.6}Crossover Operator: Precedence-Preserving Order Crossover (POX-like)}{13}{subsubsection.3.2.6}%
+\contentsline {subsubsection}{\numberline {3.2.7}Mutation Operator: Swap Mutation}{14}{subsubsection.3.2.7}%
+\contentsline {subsubsection}{\numberline {3.2.8}Repair Mechanism}{15}{subsubsection.3.2.8}%
+\contentsline {subsubsection}{\numberline {3.2.9}Termination Criteria}{15}{subsubsection.3.2.9}%
+\contentsline {section}{\numberline {4}Results}{16}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Parameter Tuning}{16}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}GA Parameter Settings}{19}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Run-by-Run Analysis}{20}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Final Population and Top-10 Individuals}{21}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4.5}Best Solution Analysis}{23}{subsection.4.5}%
+\contentsline {subsubsection}{\numberline {4.5.1}Cycle Time and Line Efficiency}{23}{subsubsection.4.5.1}%
+\contentsline {subsubsection}{\numberline {4.5.2}Station Load Distribution}{23}{subsubsection.4.5.2}%
+\contentsline {subsubsection}{\numberline {4.5.3}Task Sequence Characteristics}{24}{subsubsection.4.5.3}%
+\contentsline {subsection}{\numberline {4.6}Interpretation of Overall Results}{25}{subsection.4.6}%
+\contentsline {section}{\numberline {5}Contribution to Sustainable Development Goals}{27}{section.5}%
+\contentsline {section}{\numberline {6}Conclusions}{28}{section.6}%
+\contentsline {section}{\numberline {A}Genetic Algorithm Code for ARC83 (UALBP-II)}{30}{appendix.A}%
+\contentsline {section}{\numberline {B}Run-by-run Results for All Benchmark Instances}{49}{appendix.B}%
+\contentsline {section}{\numberline {C}Additional Results for ARC83' top 10 Individuals}{50}{appendix.C}%

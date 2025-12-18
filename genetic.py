@@ -17,7 +17,7 @@ INSTANCE_PATH     = "TONGE70.IN2"   # IN2 dosyanın yolu
 >>>>>>> 23f032477ef5d6c820aa9b637a8c90419b0d03a6
 =======
 INSTANCE_PATH     = "SAWYER30.IN2"   # IN2 dosyanın yolu
->>>>>>> f23111a76e3d950689939b230f139da5bb3b0bef
+
 M_STATIONS        = 12          # istasyon sayısı
 POP_SIZE          = 100
 GENERATIONS       = 250         #gorsellestirme-convergence

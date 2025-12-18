@@ -490,84 +490,78 @@ To generate new offspring, we employ Tournament Selection to choose parents. The
 For the algorithm, we utilized a dataset from assemblylinebalancing.de, a widely cited repository in academic literature that aggregates problem instances from numerous studies. We selected a specific instance from this collection for our analysis.
 
 The file structure is organized as follows: the initial lines represent the duration of each task. These are followed by the predecedence constraints, which are delimited by commas. Finally, an end-of-file marker indicates the termination of the data.
+% Preamble'da olsun:
+% \usepackage{caption}
+% \usepackage{algorithmicx}
+% \usepackage{algpseudocode}
 
-\begin{algorithm}[H]
-\caption{Genetic Algorithm for UALBP-II}
+
+\newpage
+\par\medskip
+\refstepcounter{algorithm}
+\noindent\rule{\linewidth}{0.4pt}\par
+\captionof{algorithm}{Genetic Algorithm for UALBP-II}
 \label{alg:ga_ualbp2}
+\noindent\rule{\linewidth}{0.4pt}\par
+\footnotesize
 
-\begin{multicols}{2}
 \begin{algorithmic}[1]
-\Require Tasks $T$, task times $t$, precedence graph $P$, number of stations $m$, population size $N_{\text{pop}}$, generations $N_{\text{gen}}$, crossover rate $P_c$, mutation rate $P_m$
-\Ensure Best cycle time $C_{\min}$ and best assignment/permutation $BestSol$
+\Statex \textbf{Require:} Tasks $T$, task times $t$, precedence graph $P$, number of stations $m$,
+population size $N_{\text{pop}}$, generations $N_{\text{gen}}$, crossover rate $P_c$, mutation rate $P_m$
+\Statex \textbf{Ensure:} Best cycle time $C_{\min}$ and best assignment/permutation $BestSol$
+\Statex
 
 \Statex \textbf{ALGORITHM:} \textsc{Genetic\_Algorithm\_for\_UALBP\_II}
-\Statex
-\Statex \textbf{INPUTS:}
-\Statex \quad Tasks $(T)$, Task Times $(t)$, Precedence Graph $(P)$
-\Statex \quad Number of Stations $(m)$
-\Statex \quad Population Size $(N_{\text{pop}})$, Max Generations $(N_{\text{gen}})$
-\Statex \quad Crossover Rate $(P_c)$, Mutation Rate $(P_m)$
-\Statex
-\Statex \textbf{OUTPUT:}
-\Statex \quad Best Cycle Time $(C_{\min})$, Best Task Assignment $(BestSol)$
-\Statex
 \Statex \textbf{BEGIN}
 
-\Statex \Comment{// 1. Initialization}
+\Statex \textit{// 1. Initialization}
 \State $Population \gets [\ ]$
 \For{$i \gets 1$ \textbf{to} $N_{\text{pop}}$}
-    \State $Candidate \gets \Call{GenerateRandomTopologicalSort}{T,P}$
+    \State $Candidate \gets \Call{GenTopoSort}{T,P}$
     \State $\Call{Append}{Population, Candidate}$
 \EndFor
 \State $BestSol \gets \emptyset$
-\State $BestFitness \gets 0$
+\State $BestFit \gets 0$
 \State $C_{\min} \gets +\infty$
 
-\Statex
-\Statex \Comment{// 2. Main Evolution Loop}
+\Statex \textit{// 2. Main Evolution Loop}
 \For{$Generation \gets 1$ \textbf{to} $N_{\text{gen}}$}
 
     \State $FitnessScores \gets [\ ]$
 
-    \Statex \Comment{// Evaluation}
+    \Statex \textit{// Evaluation}
     \ForAll{$Individual \in Population$}
-        \State $CurrentC \gets \Call{DecodeAndAssign}{Individual, m, t, P}$ \Comment{cycle time}
+        \State $CurrentC \gets \Call{DecodeAssign}{Individual,m,t,P}$
         \State $Fitness \gets 1/CurrentC$
         \State $\Call{Append}{FitnessScores, Fitness}$
-        \If{$Fitness > BestFitness$}
-            \State $BestFitness \gets Fitness$
+        \If{$Fitness > BestFit$}
+            \State $BestFit \gets Fitness$
             \State $BestSol \gets Individual$
             \State $C_{\min} \gets CurrentC$
         \EndIf
     \EndFor
 
-    \Statex \Comment{// Selection \& Reproduction}
     \State $NewPopulation \gets [\ ]$
-
-    \Statex \Comment{// Elitism: keep the current best}
-    \State $\Call{Append}{NewPopulation, BestSol}$
+    \State $\Call{Append}{NewPopulation, BestSol}$ \Comment{elitism}
 
     \While{$|NewPopulation| < N_{\text{pop}}$}
-        \State $Parent1 \gets \Call{Select}{Population, FitnessScores}$ \Comment{e.g., tournament}
-        \State $Parent2 \gets \Call{Select}{Population, FitnessScores}$
+        \State $Parent1 \gets \Call{Select}{Population,FitnessScores}$
+        \State $Parent2 \gets \Call{Select}{Population,FitnessScores}$
 
-        \Statex \Comment{// Crossover}
-        \If{$\Call{Random}{0,1} < P_c$}
-            \State $Child \gets \Call{Crossover}{Parent1, Parent2}$ \Comment{e.g., POX/OX}
+        \If{$\Call{Rand}{0,1} < P_c$}
+            \State $Child \gets \Call{Crossover}{Parent1,Parent2}$
         \Else
             \State $Child \gets Parent1$
         \EndIf
 
-        \Statex \Comment{// Mutation}
-        \If{$\Call{Random}{0,1} < P_m$}
-            \State $Child \gets \Call{Mutate}{Child}$ \Comment{e.g., swap}
+        \If{$\Call{Rand}{0,1} < P_m$}
+            \State $Child \gets \Call{Mutate}{Child}$
         \EndIf
 
-        \Statex \Comment{// Validity Check / Repair}
-        \If{$\Call{IsValidPrecedence}{Child, P}$}
+        \If{$\Call{ValidPrec}{Child,P}$}
             \State $\Call{Append}{NewPopulation, Child}$
         \Else
-            \State $Child \gets \Call{RepairToTopological}{Child, P}$
+            \State $Child \gets \Call{RepairTopo}{Child,P}$
             \State $\Call{Append}{NewPopulation, Child}$
         \EndIf
     \EndWhile
@@ -578,9 +572,10 @@ The file structure is organized as follows: the initial lines represent the dura
 \State \Return $(BestSol, C_{\min})$
 \Statex \textbf{END}
 \end{algorithmic}
-\end{multicols}
 
-\end{algorithm}
+\normalsize
+\par\noindent\rule{\linewidth}{0.4pt}
+\par\medskip
 
 
 \par
@@ -1394,36 +1389,39 @@ The POX crossover and topological repair operators worked in unison to keep feas
 \par
 \subsection{Interpretation of Overall Results}
 
+
 \begin{table}[H]
 \centering
-\caption{GA Statistics for Solved Benchmark Instances}\label{tab:ga_performance_summary}
+\caption{GA Statistics for Solved Benchmark Instances}
+\label{tab:ga_performance_summary}
 
 \resizebox{\textwidth}{!}{
-\begin{tabular}{lccccc c}
+\begin{tabular}{l c c c c c c}
 \toprule
 \textbf{Instance} &
+\textbf{Stations ($m$)} &
 \textbf{Best Cycle Time} &
 \textbf{Average Cycle Time} &
 \textbf{Worst Cycle Time} &
 \textbf{Avg. Runtime (s)} &
 \textbf{Number of Tasks ($n$)} \\
 \midrule
-ARC83      & 6467  & 6520.4 & 6562  & 26.836  & 83  \\
-ARC111     & 12542 & 12547.1 & 12550 & 42.870  & 111 \\
-GUNTHER    & 44    & 44.0   & 44    & 5.657   & 35  \\
-BARTHOLD   & 470   & 470.9  & 471   & 41.965  & 148 \\
-BARTHOL2   & 159   & 159.0  & 159   & 63.846  & 148 \\
-SCHOLL     & 1818  & 1823.8 & 1829  & 290.926 & 279 \\
-LUTZ1      & 1400  & 1400.0 & 1400  & 7.858   & 32  \\
-LUTZ3      & 548   & 548.0  & 548   & 8.583   & 89  \\
-SAWYER30   & 47    & 47.0   & 47    & 3.348   & 30  \\
-TONGE70    & 209   & 209.8  & 210   & 22.214  & 70  \\
+ARC83     & 12 & 6431  & 6464.70 & 6480 & 138.359 & 83  \\
+ARC111    & 12 & 12538 & 12541.00 & 12545 & 91.062  & 111 \\
+GUNTHER   & 12 & 44    & 44.00   & 44   & 10.356  & 35  \\
+BARTHOLD  & 12 & 470   & 470.90  & 471  & 114.729 & 148 \\
+BARTHOL2  & 30 & 143   & 143.10  & 144  & 163.445 & 148 \\
+SCHOLL    & 25 & 2799  & 2800.70 & 2804 & 697.079 & 279 \\
+LUTZ1     & 12 & 1400  & 1400.00 & 1400 & 15.487  & 32  \\
+LUTZ3     & 12 & 138   & 138.00  & 138  & 36.887  & 89  \\
+SAWYER30  & 12 & 28    & 28.00   & 28   & 19.419  & 30  \\
+TONGE70   & 12 & 294   & 294.20  & 295  & 79.287  & 70  \\
+HAHN      & 10 & 1775  & 1775.00 & 1775 & 22.974  & 53  \\
 \bottomrule
 \end{tabular}
 }
 
 \end{table}
-
 
 
 Although the problem complexity cannot be characterized solely by a single metric, the number of tasks (n) provides a reasonable first-order measure of instance size. In addition, the presence of precedence constraints significantly increases the difficulty of the problem by restricting the set of feasible task permutations. Table~\cref{tab:ga_performance_summary} summarizes the overall performance of the proposed Genetic Algorithm (GA) on several widely used UALBP benchmark instances. The results obtained clearly demonstrate that the algorithm can produce high-quality and stable solutions under different problem sizes and structural characteristics.
