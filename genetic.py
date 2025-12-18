@@ -9,7 +9,7 @@ from datetime import datetime
 # =====================================================
 # KULLANICI AYARLARI
 # =====================================================
-INSTANCE_PATH     = "ARC83.IN2"   # IN2 dosyanın yolu
+INSTANCE_PATH     = "TONGE70.IN2"   # IN2 dosyanın yolu
 M_STATIONS        = 12          # istasyon sayısı
 POP_SIZE          = 100
 GENERATIONS       = 250 #gorsellestirme
