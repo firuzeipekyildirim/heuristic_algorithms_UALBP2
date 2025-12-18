@@ -1,0 +1,43 @@
+\contentsline {section}{\numberline {1}Introduction}{3}{section.1}%
+\contentsline {section}{\numberline {2}Problem Formulation - Detailed Problem Description (UALBP-2)}{4}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Introduction to Assembly Line Balancing}{4}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Characteristics of U-Shaped Assembly Lines}{4}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}UALBP-2 Definition}{4}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}Assumptions and Constraints}{5}{subsection.2.4}%
+\contentsline {subsection}{\numberline {2.5}Computational Complexity}{5}{subsection.2.5}%
+\contentsline {subsection}{\numberline {2.6}Importance of Solving UALBP-2}{6}{subsection.2.6}%
+\contentsline {subsection}{\numberline {2.7}MILP Formulation for UALBP-2}{6}{subsection.2.7}%
+\contentsline {paragraph}{1. Task Assignment}{7}{section*.6}%
+\contentsline {paragraph}{2. Station Index Definition}{7}{section*.7}%
+\contentsline {paragraph}{3. Cycle Time Constraint}{7}{section*.8}%
+\contentsline {paragraph}{4. U-Shaped Precedence Constraints}{7}{section*.9}%
+\contentsline {paragraph}{5. Variable Domains}{7}{section*.12}%
+\contentsline {section}{\numberline {3}Description of the Genetic Algorithm}{8}{section.3}%
+\contentsline {subsection}{\numberline {3.1}The Algorithm}{8}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Implementation}{10}{subsection.3.2}%
+\contentsline {subsubsection}{\numberline {3.2.1}Constructive Heuristic}{10}{subsubsection.3.2.1}%
+\contentsline {subsubsection}{\numberline {3.2.2}Chromosome Representation}{11}{subsubsection.3.2.2}%
+\contentsline {subsubsection}{\numberline {3.2.3}U-Shaped Decoding}{11}{subsubsection.3.2.3}%
+\contentsline {subsubsection}{\numberline {3.2.4}Fitness Function}{12}{subsubsection.3.2.4}%
+\contentsline {subsubsection}{\numberline {3.2.5}Parent Selection: Tournament Selection ($k = 2$)}{12}{subsubsection.3.2.5}%
+\contentsline {subsubsection}{\numberline {3.2.6}Crossover Operator: Precedence-Preserving Order Crossover (POX-like)}{13}{subsubsection.3.2.6}%
+\contentsline {subsubsection}{\numberline {3.2.7}Mutation Operator: Swap Mutation}{14}{subsubsection.3.2.7}%
+\contentsline {subsubsection}{\numberline {3.2.8}Repair Mechanism}{15}{subsubsection.3.2.8}%
+\contentsline {subsubsection}{\numberline {3.2.9}Termination Criteria}{15}{subsubsection.3.2.9}%
+\contentsline {section}{\numberline {4}Results}{16}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Parameter Tuning}{16}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}GA Parameter Settings}{21}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Run-by-Run Analysis}{22}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Final Population and Top-10 Individuals}{22}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4.5}Best Solution Analysis}{24}{subsection.4.5}%
+\contentsline {subsubsection}{\numberline {4.5.1}Cycle Time and Line Efficiency}{25}{subsubsection.4.5.1}%
+\contentsline {subsubsection}{\numberline {4.5.2}Station Load Distribution}{25}{subsubsection.4.5.2}%
+\contentsline {subsubsection}{\numberline {4.5.3}Task Sequence Characteristics}{26}{subsubsection.4.5.3}%
+\contentsline {subsection}{\numberline {4.6}Interpretation of Overall Results}{26}{subsection.4.6}%
+\contentsline {section}{\numberline {5}Contribution to Sustainable Development Goals}{28}{section.5}%
+\contentsline {section}{\numberline {6}Conclusions}{29}{section.6}%
+\contentsline {section}{\numberline {A}Run-by-run Results for All Benchmark Instances}{33}{appendix.A}%
+\contentsline {section}{\numberline {B}Run-by-run Results for All Benchmark Instances}{33}{appendix.B}%
+\contentsline {section}{\numberline {C}Additional Results for ARC83' top 10 Individuals}{35}{appendix.C}%
+\contentsline {section}{\numberline {D}Line Graphs For 9 Instances}{40}{appendix.D}%
+\contentsline {section}{\numberline {E}Genetic Algorithm Code for ARC83 (UALBP-II)}{45}{appendix.E}%

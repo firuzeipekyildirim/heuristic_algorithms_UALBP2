@@ -1,0 +1,196 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\citation{becker_scholl_2006_generalized_survey}
+\citation{miltenburg_2001}
+\citation{boysen_fliedner_scholl_2007}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{3}{section.1}\protected@file@percent }
+\citation{scholl_becker_2006}
+\citation{talbot_patterson_gehrlein_1986}
+\citation{garey_johnson_1979}
+\citation{miltenburg_2001}
+\citation{urban_1998}
+\citation{miltenburg_2001}
+\citation{scholl_klein_1999}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Problem Formulation - Detailed Problem Description (UALBP-2)}{4}{section.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Introduction to Assembly Line Balancing}{4}{subsection.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Characteristics of U-Shaped Assembly Lines}{4}{subsection.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}UALBP-2 Definition}{4}{subsection.2.3}\protected@file@percent }
+\citation{baybars_1986}
+\citation{garey_johnson_1979}
+\citation{scholl_klein_1999}
+\citation{scholl_klein_1999}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Assumptions and Constraints}{5}{subsection.2.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5}Computational Complexity}{5}{subsection.2.5}\protected@file@percent }
+\citation{aase_suresh_2003}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.6}Importance of Solving UALBP-2}{6}{subsection.2.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.7}MILP Formulation for UALBP-2}{6}{subsection.2.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{1. Task Assignment}{7}{section*.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{2. Station Index Definition}{7}{section*.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{3. Cycle Time Constraint}{7}{section*.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{4. U-Shaped Precedence Constraints}{7}{section*.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{5. Variable Domains}{7}{section*.12}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3}Description of the Genetic Algorithm}{8}{section.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}The Algorithm}{8}{subsection.3.1}\protected@file@percent }
+\@writefile{loa}{\contentsline {algorithm}{\numberline {2}{\ignorespaces Genetic Algorithm for UALBP-II}}{9}{algorithm.2}\protected@file@percent }
+\newlabel{alg:ga_ualbp2}{{2}{9}{Genetic Algorithm for UALBP-II}{algorithm.2}{}}
+\newlabel{alg:ga_ualbp2@cref}{{[algorithm][2][]2}{[1][9][]9}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Implementation}{10}{subsection.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.1}Constructive Heuristic}{10}{subsubsection.3.2.1}\protected@file@percent }
+\citation{GhoshGagne2011}
+\citation{GhoshGagne2011}
+\citation{KaraIslierAtasagun2010}
+\citation{scholl_klein_1999}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {3}{\ignorespaces InitializePopulationTopological (Random Topological Sort)}}{11}{algorithm.3}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{alg:init_topo}{{3}{11}{InitializePopulationTopological (Random Topological Sort)}{algorithm.3}{}}
+\newlabel{alg:init_topo@cref}{{[algorithm][3][]3}{[1][10][]11}{}{}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.2}Chromosome Representation}{11}{subsubsection.3.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.3}U-Shaped Decoding}{11}{subsubsection.3.2.3}\protected@file@percent }
+\citation{ErelSarin1998}
+\citation{BlickleThiele1996}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.4}Fitness Function}{12}{subsubsection.3.2.4}\protected@file@percent }
+\newlabel{eq:cycle_time}{{6}{12}{Fitness Function}{equation.6}{}}
+\newlabel{eq:cycle_time@cref}{{[equation][6][]6}{[1][12][]12}{}{}{}}
+\newlabel{eq:fitness}{{7}{12}{Fitness Function}{equation.7}{}}
+\newlabel{eq:fitness@cref}{{[equation][7][]7}{[1][12][]12}{}{}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.5}Parent Selection: Tournament Selection ($k = 2$)}{12}{subsubsection.3.2.5}\protected@file@percent }
+\citation{ParkKimLee2003}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {4}{\ignorespaces TournamentSelection ($k=2$)}}{13}{algorithm.4}\protected@file@percent }
+\newlabel{alg:tournament}{{4}{13}{TournamentSelection ($k=2$)}{algorithm.4}{}}
+\newlabel{alg:tournament@cref}{{[algorithm][4][]4}{[1][12][]13}{}{}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.6}Crossover Operator: Precedence-Preserving Order Crossover (POX-like)}{13}{subsubsection.3.2.6}\protected@file@percent }
+\citation{Reeves1993}
+\citation{goldberg_1989}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {5}{\ignorespaces POXCrossover (Precedence-Preserving Order Crossover)}}{14}{algorithm.5}\protected@file@percent }
+\newlabel{alg:pox}{{5}{14}{POXCrossover (Precedence-Preserving Order Crossover)}{algorithm.5}{}}
+\newlabel{alg:pox@cref}{{[algorithm][5][]5}{[1][13][]14}{}{}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.7}Mutation Operator: Swap Mutation}{14}{subsubsection.3.2.7}\protected@file@percent }
+\@writefile{loa}{\contentsline {algorithm}{\numberline {6}{\ignorespaces SwapMutation}}{14}{algorithm.6}\protected@file@percent }
+\newlabel{alg:swap}{{6}{14}{SwapMutation}{algorithm.6}{}}
+\newlabel{alg:swap@cref}{{[algorithm][6][]6}{[1][14][]14}{}{}{}}
+\citation{PapadimitriouSteiglitz1998}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.8}Repair Mechanism}{15}{subsubsection.3.2.8}\protected@file@percent }
+\@writefile{loa}{\contentsline {algorithm}{\numberline {7}{\ignorespaces RepairToTopological (Lightweight Repair)}}{15}{algorithm.7}\protected@file@percent }
+\newlabel{alg:repair}{{7}{15}{RepairToTopological (Lightweight Repair)}{algorithm.7}{}}
+\newlabel{alg:repair@cref}{{[algorithm][7][]7}{[1][14][]15}{}{}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.9}Termination Criteria}{15}{subsubsection.3.2.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4}Results}{16}{section.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Parameter Tuning}{16}{subsection.4.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Cycle Time Heatmap}}{16}{figure.caption.13}\protected@file@percent }
+\newlabel{fig:heatmap}{{1}{16}{Cycle Time Heatmap}{figure.caption.13}{}}
+\newlabel{fig:heatmap@cref}{{[figure][1][]1}{[1][16][]16}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Execution Time Heatmap}}{18}{figure.caption.14}\protected@file@percent }
+\newlabel{fig:heatmap2}{{2}{18}{Execution Time Heatmap}{figure.caption.14}{}}
+\newlabel{fig:heatmap2@cref}{{[figure][2][]2}{[1][17][]18}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Execution Time Heatmap}}{19}{figure.caption.15}\protected@file@percent }
+\newlabel{fig:pareto}{{3}{19}{Execution Time Heatmap}{figure.caption.15}{}}
+\newlabel{fig:pareto@cref}{{[figure][3][]3}{[1][18][]19}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Convergence graph for ARC83, Run 1}}{20}{figure.caption.16}\protected@file@percent }
+\newlabel{fig:csv-graph_arc83}{{4}{20}{Convergence graph for ARC83, Run 1}{figure.caption.16}{}}
+\newlabel{fig:csv-graph_arc83@cref}{{[figure][4][]4}{[1][20][]20}{}{}{}}
+\newlabel{fig:arc83-convergence}{{4.1}{20}{Parameter Tuning}{figure.caption.16}{}}
+\newlabel{fig:arc83-convergence@cref}{{[subsection][1][4]4.1}{[1][20][]20}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Convergence graphs for ARC83 (Best cycle time so far)}}{21}{figure.caption.17}\protected@file@percent }
+\newlabel{fig:arc83-convergence}{{5}{21}{Convergence graphs for ARC83 (Best cycle time so far)}{figure.caption.17}{}}
+\newlabel{fig:arc83-convergence@cref}{{[figure][5][]5}{[1][20][]21}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}GA Parameter Settings}{21}{subsection.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Run-by-Run Analysis}{22}{subsection.4.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Instance ARC83 cycle time obtained in each of the 10 independent GA runs, including best, worst, and average values.}}{22}{figure.caption.18}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Final Population and Top-10 Individuals}{22}{subsection.4.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces U-shaped 12-station assignment for ARC83 (Individual 1, Fitness = 0.000155).}}{23}{figure.caption.19}\protected@file@percent }
+\newlabel{fig:arc83-ind1}{{7}{23}{U-shaped 12-station assignment for ARC83 (Individual 1, Fitness = 0.000155)}{figure.caption.19}{}}
+\newlabel{fig:arc83-ind1@cref}{{[figure][7][]7}{[1][23][]23}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces U-shaped 12-station assignment for ARC83 (Individual 2, Fitness = 0.000155).}}{24}{figure.caption.20}\protected@file@percent }
+\newlabel{fig:arc83-ind2}{{8}{24}{U-shaped 12-station assignment for ARC83 (Individual 2, Fitness = 0.000155)}{figure.caption.20}{}}
+\newlabel{fig:arc83-ind2@cref}{{[figure][8][]8}{[1][23][]24}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}Best Solution Analysis}{24}{subsection.4.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.5.1}Cycle Time and Line Efficiency}{25}{subsubsection.4.5.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Best Solution For ARC83}}{25}{figure.caption.21}\protected@file@percent }
+\newlabel{fig:bestsol}{{9}{25}{Best Solution For ARC83}{figure.caption.21}{}}
+\newlabel{fig:bestsol@cref}{{[figure][9][]9}{[1][25][]25}{}{}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.5.2}Station Load Distribution}{25}{subsubsection.4.5.2}\protected@file@percent }
+\citation{becker_scholl_2006_generalized_survey}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.5.3}Task Sequence Characteristics}{26}{subsubsection.4.5.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.6}Interpretation of Overall Results}{26}{subsection.4.6}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces GA Statistics for Solved Benchmark Instances}}{26}{table.caption.22}\protected@file@percent }
+\newlabel{tab:ga_performance_summary}{{1}{26}{GA Statistics for Solved Benchmark Instances}{table.caption.22}{}}
+\newlabel{tab:ga_performance_summary@cref}{{[table][1][]1}{[1][26][]26}{}{}{}}
+\citation{un_2030_agenda_2015}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Contribution to Sustainable Development Goals}{28}{section.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6}Conclusions}{29}{section.6}\protected@file@percent }
+\bibstyle{IEEEtran}
+\bibdata{references}
+\bibcite{becker_scholl_2006_generalized_survey}{1}
+\bibcite{miltenburg_2001}{2}
+\bibcite{boysen_fliedner_scholl_2007}{3}
+\bibcite{scholl_becker_2006}{4}
+\bibcite{talbot_patterson_gehrlein_1986}{5}
+\bibcite{garey_johnson_1979}{6}
+\bibcite{urban_1998}{7}
+\bibcite{scholl_klein_1999}{8}
+\bibcite{baybars_1986}{9}
+\bibcite{aase_suresh_2003}{10}
+\bibcite{GhoshGagne2011}{11}
+\bibcite{KaraIslierAtasagun2010}{12}
+\bibcite{ErelSarin1998}{13}
+\bibcite{BlickleThiele1996}{14}
+\bibcite{ParkKimLee2003}{15}
+\bibcite{Reeves1993}{16}
+\bibcite{goldberg_1989}{17}
+\bibcite{PapadimitriouSteiglitz1998}{18}
+\bibcite{un_2030_agenda_2015}{19}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Run-by-run best cycle time and runtime results for all benchmark instances.}}{33}{table.caption.27}\protected@file@percent }
+\newlabel{tab:run_by_run_all}{{2}{33}{Run-by-run best cycle time and runtime results for all benchmark instances}{table.caption.27}{}}
+\newlabel{tab:run_by_run_all@cref}{{[table][2][]2}{[1][33][]33}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {A}Run-by-run Results for All Benchmark Instances}{33}{appendix.A}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {B}Run-by-run Results for All Benchmark Instances}{33}{appendix.B}\protected@file@percent }
+\newlabel{app:run-by-run}{{B}{33}{Run-by-run Results for All Benchmark Instances}{appendix.B}{}}
+\newlabel{app:run-by-run@cref}{{[section][2][]B}{[1][33][]33}{}{}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Run-by-run best cycle time and runtime results for all benchmark instances (continued).}}{34}{table.caption.28}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Run-by-run best cycle time and runtime results for all benchmark instances (continued).}}{34}{table.caption.29}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces U-shaped 12-station assignment for ARC83 (Individual 3, Fitness = 0.000155).}}{35}{figure.caption.30}\protected@file@percent }
+\newlabel{fig:arc83-ind3}{{10}{35}{U-shaped 12-station assignment for ARC83 (Individual 3, Fitness = 0.000155)}{figure.caption.30}{}}
+\newlabel{fig:arc83-ind3@cref}{{[figure][10][]10}{[1][35][]35}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {C}Additional Results for ARC83' top 10 Individuals}{35}{appendix.C}\protected@file@percent }
+\newlabel{app:arc83-topten}{{C}{35}{Additional Results for ARC83' top 10 Individuals}{appendix.C}{}}
+\newlabel{app:arc83-topten@cref}{{[section][3][]C}{[1][35][]35}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces U-shaped 12-station assignment for ARC83 (Individual 4, Fitness = 0.000155).}}{36}{figure.caption.31}\protected@file@percent }
+\newlabel{fig:arc83-ind4}{{11}{36}{U-shaped 12-station assignment for ARC83 (Individual 4, Fitness = 0.000155)}{figure.caption.31}{}}
+\newlabel{fig:arc83-ind4@cref}{{[figure][11][]11}{[1][35][]36}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces U-shaped 12-station assignment for ARC83 (Individual 5, Fitness = 0.000155).}}{36}{figure.caption.32}\protected@file@percent }
+\newlabel{fig:arc83-ind5}{{12}{36}{U-shaped 12-station assignment for ARC83 (Individual 5, Fitness = 0.000155)}{figure.caption.32}{}}
+\newlabel{fig:arc83-ind5@cref}{{[figure][12][]12}{[1][35][]36}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces U-shaped 12-station assignment for ARC83 (Individual 6, Fitness = 0.000155).}}{37}{figure.caption.33}\protected@file@percent }
+\newlabel{fig:arc83-ind6}{{13}{37}{U-shaped 12-station assignment for ARC83 (Individual 6, Fitness = 0.000155)}{figure.caption.33}{}}
+\newlabel{fig:arc83-ind6@cref}{{[figure][13][]13}{[1][35][]37}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {14}{\ignorespaces U-shaped 12-station assignment for ARC83 (Individual 7, Fitness = 0.000155).}}{37}{figure.caption.34}\protected@file@percent }
+\newlabel{fig:arc83-ind7}{{14}{37}{U-shaped 12-station assignment for ARC83 (Individual 7, Fitness = 0.000155)}{figure.caption.34}{}}
+\newlabel{fig:arc83-ind7@cref}{{[figure][14][]14}{[1][35][]37}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {15}{\ignorespaces U-shaped 12-station assignment for ARC83 (Individual 8, Fitness = 0.000155).}}{38}{figure.caption.35}\protected@file@percent }
+\newlabel{fig:arc83-ind8}{{15}{38}{U-shaped 12-station assignment for ARC83 (Individual 8, Fitness = 0.000155)}{figure.caption.35}{}}
+\newlabel{fig:arc83-ind8@cref}{{[figure][15][]15}{[1][35][]38}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {16}{\ignorespaces U-shaped 12-station assignment for ARC83 (Individual 9, Fitness = 0.000155).}}{38}{figure.caption.36}\protected@file@percent }
+\newlabel{fig:arc83-ind9}{{16}{38}{U-shaped 12-station assignment for ARC83 (Individual 9, Fitness = 0.000155)}{figure.caption.36}{}}
+\newlabel{fig:arc83-ind9@cref}{{[figure][16][]16}{[1][35][]38}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {17}{\ignorespaces U-shaped 12-station assignment for ARC83 (Individual 10, Fitness = 0.000154).}}{39}{figure.caption.37}\protected@file@percent }
+\newlabel{fig:arc83-ind10}{{17}{39}{U-shaped 12-station assignment for ARC83 (Individual 10, Fitness = 0.000154)}{figure.caption.37}{}}
+\newlabel{fig:arc83-ind10@cref}{{[figure][17][]17}{[1][35][]39}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {D}Line Graphs For 9 Instances}{40}{appendix.D}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {18}{\ignorespaces Instance ARC111 cycle time obtained in each of the 10 independent GA runs, including best, worst, and average values.}}{40}{figure.caption.38}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {19}{\ignorespaces Instance BARTHOL2 cycle time obtained in each of the 10 independent GA runs, including best, worst, and average values.}}{40}{figure.caption.39}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {20}{\ignorespaces Instance BARTHOLD cycle time obtained in each of the 10 independent GA runs, including best, worst, and average values.}}{41}{figure.caption.40}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {21}{\ignorespaces Instance GUNTHER cycle time obtained in each of the 10 independent GA runs, including best, worst, and average values.}}{41}{figure.caption.41}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {22}{\ignorespaces Instance HAHN cycle time obtained in each of the 10 independent GA runs, including best, worst, and average values.}}{42}{figure.caption.42}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {23}{\ignorespaces Instance LUTZ1 cycle time obtained in each of the 10 independent GA runs, including best, worst, and average values.}}{42}{figure.caption.43}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {24}{\ignorespaces Instance LUTZ3 cycle time obtained in each of the 10 independent GA runs, including best, worst, and average values.}}{43}{figure.caption.44}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {25}{\ignorespaces Instance SAWYER30 cycle time obtained in each of the 10 independent GA runs, including best, worst, and average values.}}{43}{figure.caption.45}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {26}{\ignorespaces Instance TONGE70 cycle time obtained in each of the 10 independent GA runs, including best, worst, and average values.}}{44}{figure.caption.46}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {E}Genetic Algorithm Code for ARC83 (UALBP-II)}{45}{appendix.E}\protected@file@percent }
+\newlabel{app:ga-code}{{E}{45}{Genetic Algorithm Code for ARC83 (UALBP-II)}{appendix.E}{}}
+\newlabel{app:ga-code@cref}{{[section][5][]E}{[1][45][]45}{}{}{}}
+\newlabel{lst:ga-arc83-full}{{1}{45}{Python implementation of the genetic algorithm for the U-shaped assembly line balancing problem (UALBP-II) on the ARC83 instance}{lstlisting.1}{}}
+\newlabel{lst:ga-arc83-full@cref}{{[lstlisting][1][]1}{[1][45][]45}{}{}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {1}{\ignorespaces Python implementation of the genetic algorithm for the U-shaped assembly line balancing problem (UALBP-II) on the ARC83 instance.}}{45}{lstlisting.1}\protected@file@percent }
+\gdef \@abspage@last{65}
