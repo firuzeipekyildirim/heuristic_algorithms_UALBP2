@@ -26,16 +26,17 @@
 \contentsline {subsubsection}{\numberline {3.2.9}Termination Criteria}{15}{subsubsection.3.2.9}%
 \contentsline {section}{\numberline {4}Results}{16}{section.4}%
 \contentsline {subsection}{\numberline {4.1}Parameter Tuning}{16}{subsection.4.1}%
-\contentsline {subsection}{\numberline {4.2}GA Parameter Settings}{19}{subsection.4.2}%
-\contentsline {subsection}{\numberline {4.3}Run-by-Run Analysis}{20}{subsection.4.3}%
-\contentsline {subsection}{\numberline {4.4}Final Population and Top-10 Individuals}{21}{subsection.4.4}%
-\contentsline {subsection}{\numberline {4.5}Best Solution Analysis}{23}{subsection.4.5}%
-\contentsline {subsubsection}{\numberline {4.5.1}Cycle Time and Line Efficiency}{23}{subsubsection.4.5.1}%
-\contentsline {subsubsection}{\numberline {4.5.2}Station Load Distribution}{23}{subsubsection.4.5.2}%
-\contentsline {subsubsection}{\numberline {4.5.3}Task Sequence Characteristics}{24}{subsubsection.4.5.3}%
-\contentsline {subsection}{\numberline {4.6}Interpretation of Overall Results}{25}{subsection.4.6}%
-\contentsline {section}{\numberline {5}Contribution to Sustainable Development Goals}{27}{section.5}%
-\contentsline {section}{\numberline {6}Conclusions}{28}{section.6}%
-\contentsline {section}{\numberline {A}Genetic Algorithm Code for ARC83 (UALBP-II)}{30}{appendix.A}%
-\contentsline {section}{\numberline {B}Run-by-run Results for All Benchmark Instances}{49}{appendix.B}%
-\contentsline {section}{\numberline {C}Additional Results for ARC83' top 10 Individuals}{50}{appendix.C}%
+\contentsline {subsection}{\numberline {4.2}GA Parameter Settings}{21}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Run-by-Run Analysis}{22}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Final Population and Top-10 Individuals}{23}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4.5}Best Solution Analysis}{25}{subsection.4.5}%
+\contentsline {subsubsection}{\numberline {4.5.1}Cycle Time and Line Efficiency}{25}{subsubsection.4.5.1}%
+\contentsline {subsubsection}{\numberline {4.5.2}Station Load Distribution}{25}{subsubsection.4.5.2}%
+\contentsline {subsubsection}{\numberline {4.5.3}Task Sequence Characteristics}{26}{subsubsection.4.5.3}%
+\contentsline {subsection}{\numberline {4.6}Interpretation of Overall Results}{27}{subsection.4.6}%
+\contentsline {section}{\numberline {5}Contribution to Sustainable Development Goals}{29}{section.5}%
+\contentsline {section}{\numberline {6}Conclusions}{30}{section.6}%
+\contentsline {section}{\numberline {A}Genetic Algorithm Code for ARC83 (UALBP-II)}{32}{appendix.A}%
+\contentsline {section}{\numberline {B}Run-by-run Results for All Benchmark Instances}{51}{appendix.B}%
+\contentsline {section}{\numberline {C}Additional Results for ARC83' top 10 Individuals}{53}{appendix.C}%
+\contentsline {section}{\numberline {D}Line Graphs For 9 Instances}{53}{appendix.D}%
