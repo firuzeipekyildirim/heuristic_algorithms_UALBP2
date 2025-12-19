@@ -37,7 +37,6 @@
 \contentsline {section}{\numberline {5}Contribution to Sustainable Development Goals}{28}{section.5}%
 \contentsline {section}{\numberline {6}Conclusions}{29}{section.6}%
 \contentsline {section}{\numberline {A}Run-by-run Results for All Benchmark Instances}{33}{appendix.A}%
-\contentsline {section}{\numberline {B}Run-by-run Results for All Benchmark Instances}{33}{appendix.B}%
-\contentsline {section}{\numberline {C}Additional Results for ARC83' top 10 Individuals}{35}{appendix.C}%
-\contentsline {section}{\numberline {D}Line Graphs For 9 Instances}{40}{appendix.D}%
-\contentsline {section}{\numberline {E}Genetic Algorithm Code for ARC83 (UALBP-II)}{45}{appendix.E}%
+\contentsline {section}{\numberline {B}Additional Results for ARC83' top 10 Individuals}{35}{appendix.B}%
+\contentsline {section}{\numberline {C}Line Graphs For 9 Instances}{40}{appendix.C}%
+\contentsline {section}{\numberline {D}Genetic Algorithm Code for ARC83 (UALBP-II)}{45}{appendix.D}%
